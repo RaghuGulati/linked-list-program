@@ -1,275 +1,109 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdbool.h>
+#include <stdio.h>  
+#include <stdlib.h>  
+  
+// A linked list node  
+struct Node {  
+    int data;
+    double key;
+    struct Node* prev, *next;
+    struct Node* prev_sorted, *sort;
+/*    struct Node* prev;
+    struct Node* prev_sorted;  */
+};  
 
-struct node {
-   int data;
-   int key;
+/*push function to add the node to the head of the list*/
+void push(struct Node** head_ref, int new_data, double new_key)  
+{  
+    struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));  
+    struct Node* current = (struct Node*)malloc(sizeof(struct Node));
+ 
+    new_node->data = new_data;
+    new_node->key = new_key;
+  
+    new_node->next = (*head_ref);
+    new_node->prev = NULL;
+
+    new_node->sort = NULL;
+    new_node->prev_sorted = NULL;
+
+//    (*head_ref) = new_node;  
+    // if list is empty
+    if (*head_ref == NULL){
+        *head_ref = new_node;
+    }
+
+    // if the node is to be inserted at the beginning of the doubly linked list
+    else {
+	    (*head_ref)->prev = new_node;
+
+	    if ((*head_ref)->key >= new_node->key) {
+	        new_node->sort = *head_ref;
+	        new_node->sort->prev_sorted = new_node;
+	        *head_ref = new_node;
+	    }
 	
-   struct node *next;
-   struct node *prev;
-};
-
-//this link always point to first Link
-struct node *head = NULL;
-
-//this link always point to last Link 
-struct node *last = NULL;
-
-struct node *current = NULL;
-
-//is list empty
-bool isEmpty() {
-   return head == NULL;
-}
-
-int length() {
-   int length = 0;
-   struct node *current;
+	    else {
+	        current = *head_ref;
 	
-   for(current = head; current != NULL; current = current->next){
-      length++;
+	        // locate the node after which the new node
+	        // is to be inserted
+	        while (current->sort != NULL && current->sort->key < new_node->key){
+	            current = current->sort;
+		}
+
+	        /* Make the appropriate links */
+	        new_node->sort = current->sort;
+	
+	        // if the new node is not inserted at the end of the list
+	        if (current->sort != NULL){
+	            new_node->sort->prev_sorted = new_node;
+		}
+
+	        current->sort = new_node;
+	        new_node->prev_sorted = current;
+	    }
    }
-	
-   return length;
-}
+    (*head_ref) = new_node;
+}  
 
-//display the list in from first to last
-void displayForward() {
 
-   //start from the beginning
-   struct node *ptr = head;
-	
-   //navigate till the end of the list
-   printf("\n[ ");
-	
-   while(ptr != NULL) {        
-      printf("(%d,%d) ",ptr->key,ptr->data);
-      ptr = ptr->next;
-   }
-	
-   printf(" ]");
-}
+// This function prints contents of linked list starting from the given node  
+void printList(struct Node* node)  
+{  
+    struct Node* last;  
+//    node = main;
 
-//display the list from last to first
-void displayBackward() {
+    while (node != NULL) {  
+        printf(" (%d, %0.2f) ", node->data, node->key);  
+        last = node;  
+        node = node->next; 
+    }
+}  
+  
+/* Driver program to test above functions*/
+int main()  
+{  
+    /* Start with the empty list */
+    struct Node* head = NULL;
+    struct Node* head_sort = NULL;
+    //struct Node
+//    push(&head, 7, 0.62);  
+    push(&head, 1, 1.95);  
+    push(&head, 4, 1.85);
+    push(&head, 6, 1.65);
+    push(&head, 8, 1.4);
+    push(&head, 5, 0.92);
+    push(&head, 15, 0.59);
+    push(&head, 6, 0.50);
+    push(&head, 12, 1.26);
 
-   //start from the last
-   struct node *ptr = last;
-	
-   //navigate till the start of the list
-   printf("\n[ ");
-	
-   while(ptr != NULL) {    
-	
-      //print data
-      printf("(%d,%d) ",ptr->key,ptr->data);
-		
-      //move to next item
-      ptr = ptr ->prev;
-      
-   }
-	
-}
+//    push(&head, 7, 0.65);
+    printf("Created DLL is: ");  
+    printList(head);  
+  
+  /*  int size = length(head);
+    printf("\nSize of linked list: %d \n", size);*/
 
-//insert link at the first location
-void insertFirst(int key, int data) {
-
-   //create a link
-   struct node *link = (struct node*) malloc(sizeof(struct node));
-   link->key = key;
-   link->data = data;
-	
-   if(isEmpty()) {
-      //make it the last link
-      last = link;
-   } else {
-      //update first prev link
-      head->prev = link;
-   }
-
-   //point it to old first link
-   link->next = head;
-	
-   //point first to new first link
-   head = link;
-}
-
-//insert link at the last location
-void insertLast(int key, int data) {
-
-   //create a link
-   struct node *link = (struct node*) malloc(sizeof(struct node));
-   link->key = key;
-   link->data = data;
-	
-   if(isEmpty()) {
-      //make it the last link
-      last = link;
-   } else {
-      //make link a new last link
-      last->next = link;     
-      
-      //mark old last node as prev of new link
-      link->prev = last;
-   }
-
-   //point last to new last node
-   last = link;
-}
-
-//delete first item
-struct node* deleteFirst() {
-
-   //save reference to first link
-   struct node *tempLink = head;
-	
-   //if only one link
-   if(head->next == NULL){
-      last = NULL;
-   } else {
-      head->next->prev = NULL;
-   }
-	
-   head = head->next;
-   //return the deleted link
-   return tempLink;
-}
-
-//delete link at the last location
-
-struct node* deleteLast() {
-   //save reference to last link
-   struct node *tempLink = last;
-	
-   //if only one link
-   if(head->next == NULL) {
-      head = NULL;
-   } else {
-      last->prev->next = NULL;
-   }
-	
-   last = last->prev;
-	
-   //return the deleted link
-   return tempLink;
-}
-
-//delete a link with given key
-
-struct node* delete(int key) {
-
-   //start from the first link
-   struct node* current = head;
-   struct node* previous = NULL;
-	
-   //if list is empty
-   if(head == NULL) {
-      return NULL;
-   }
-
-   //navigate through list
-   while(current->key != key) {
-      //if it is last node
-		
-      if(current->next == NULL) {
-         return NULL;
-      } else {
-         //store reference to current link
-         previous = current;
-			
-         //move to next link
-         current = current->next;             
-      }
-   }
-
-   //found a match, update the link
-   if(current == head) {
-      //change first to point to next link
-      head = head->next;
-   } else {
-      //bypass the current link
-      current->prev->next = current->next;
-   }    
-
-   if(current == last) {
-      //change last to point to prev link
-      last = current->prev;
-   } else {
-      current->next->prev = current->prev;
-   }
-	
-   return current;
-}
-
-bool insertAfter(int key, int newKey, int data) {
-   //start from the first link
-   struct node *current = head; 
-	
-   //if list is empty
-   if(head == NULL) {
-      return false;
-   }
-
-   //navigate through list
-   while(current->key != key) {
-	
-      //if it is last node
-      if(current->next == NULL) {
-         return false;
-      } else {           
-         //move to next link
-         current = current->next;
-      }
-   }
-	
-   //create a link
-   struct node *newLink = (struct node*) malloc(sizeof(struct node));
-   newLink->key = newKey;
-   newLink->data = data;
-
-   if(current == last) {
-      newLink->next = NULL; 
-      last = newLink; 
-   } else {
-      newLink->next = current->next;         
-      current->next->prev = newLink;
-   }
-	
-   newLink->prev = current; 
-   current->next = newLink; 
-   return true; 
-}
-
-void main() {
-   insertFirst(1,10);
-   insertFirst(2,20);
-   insertFirst(3,30);
-   insertFirst(4,1);
-   insertFirst(5,40);
-   insertFirst(6,56); 
-
-   printf("\nList (First to Last): ");  
-   displayForward();
-	
-   printf("\n");
-   printf("\nList (Last to first): "); 
-   displayBackward();
-
-   printf("\nList , after deleting first record: ");
-   deleteFirst();        
-   displayForward();
-
-   printf("\nList , after deleting last record: ");  
-   deleteLast();
-   displayForward();
-
-   printf("\nList , insert after key(4) : ");  
-   insertAfter(4,7, 13);
-   displayForward();
-
-   printf("\nList  , after delete key(4) : ");  
-   delete(4);
-   displayForward();
-}
+    getchar();  
+    return 0;  
+}  
