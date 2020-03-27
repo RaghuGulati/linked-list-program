@@ -94,21 +94,20 @@ void printList(Sorted_list * list_detail)
 {  
     struct Node* last;  
     struct Node* node;
-    struct Node* n2;
+    struct Node* n2 = (struct Node*)malloc(sizeof(struct Node));
+
     node = list_detail->head;
     printf("List by insertion order: \n");
     while (node != NULL) {  
         printf(" (%d, %d) ", node->value, node->key);  
-        last = node;  
         node = node->next; 
     }
     printf("\nList by key_sort order: \n");
 
     n2 = list_detail->head_sort;
-    while (node != NULL) {  
-        printf(" (%d, %d) ", n2->value, n2->key);  
-        last = n2;  
-        node = n2->next; 
+    while (n2 != NULL) {  
+        printf(" (%d, %d) ", n2->value, n2->key); 
+        n2 = n2->next; 
     }
 
     }
@@ -226,7 +225,7 @@ int main()
     push(list_detail,  17, 162);  
     push(list_detail,  7, 612);  
     push(list_detail,  7, 42);  
-    push(list_detail,  7, 12);  
+//    push(list_detail,  7, 12);  
 //    push(list_detail,  7, 0);  
 
     //append(&head, &head_sort,  15, 0.59);
