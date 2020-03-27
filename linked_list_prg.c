@@ -9,13 +9,13 @@ struct Node {
     struct Node* prev_sorted, *sort;
 };  
 //Sorted_list data type
-typedef struct Sorted_list{
-    struct Node* head= NULL;
-    struct Node * head_sort=NULL;
-    struct Node *tails=NULL;
-    struct Node * tails_sort=NULL;
+typedef struct {
+    struct Node* head;
+    struct Node * head_sort;
+    struct Node *tails;
+    struct Node * tails_sort;
     int size ;//store the node count
-};
+}Sorted_list;
 //size function to calculate the size of linked list
 int size(struct Node* head) {
    int length = 0;
@@ -261,13 +261,14 @@ int remove_last(Sorted_list * ADT,value_t * value, key_t * key)
 
 	       
 			
-}
+
 /* Main function of the program*/
 int main()  
 {  
     /* initilizing head and head_sort for the linked list */
     struct Node* head = NULL;
     struct Node* head_sort = NULL;
+    Sorted_list * list_detail=(Sorted_list *)malloc(sizeof(Sorted_list));
 
     //struct Node
     push(&head, &head_sort,  7, 0.62);  
