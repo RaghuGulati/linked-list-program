@@ -200,7 +200,9 @@ int remove_first(Sorted_list * ADT,value_t * value, key_t * key)
                 deleted_Node_Key=Sorted_list->head->key;
 		//update head_sort
 		Sorted_list->head->sort->prev=Sorted_list->head->prev_sorted;
-		Sorted_list->head->prev_sorted->sort=Sorted_list->head->sort;
+		if(Sorted_list->head->prev_sorted != NULL){//if head and head_sort are same
+			Sorted_list->head->prev_sorted->sort=Sorted_list->head->sort;
+		}
 		//update head
                 Sorted_list->head=Sorted_list->head->next;
 		Sorted_list->head->prev=NULL;
@@ -210,6 +212,53 @@ int remove_first(Sorted_list * ADT,value_t * value, key_t * key)
 	key=deleted_Node_Key;
 	return 1;
 }
+/*
+ *function to remove last  node
+ *@param Sorted_list *
+ *@param value_t
+ *@param key_t *
+ */
+int remove_last(Sorted_list * ADT,value_t * value, key_t * key)
+{
+        struct Node *ptr;
+        value_t deleted_Node_Value;
+        key_t   deleted_Node_Key;
+        if(Sorted_list->tails == NULL){
+                printf("\n UNDERFLOW");
+        }
+        else if(Sorted_list->tails->prev==NULL){
+                deleted_Node_Value=Sorted_list->tails->value;
+                deleted_Node_Key=Sorted_list->tails->key;
+                //onlt one element in list
+                Sorted_list->tails= NULL
+                Sorted_list->tail_sort=NULL;
+                Sorted_list->head=NULL;
+                Sorted_list->head_sort=NULL;
+                free(Sorted_list->tails);
+                printf("\nNode deleted\n");
+        }
+        else{
+                ptr =Sorted_list->tails;
+                deleted_Node_Value=Sorted_list->tails->value;
+                deleted_Node_Key=Sorted_list->tails->key;
+                //update tails_sort
+		if(Sorted_list->tails->sort != NULL){// if tails and tail_sort are same
+                
+			Sorted_list->tails->sort->prev=Sorted_list->tails->prev_sorted;
+		}
+		Sorted_list->tails->prev_sorted->sort=Sorted_list->tails->sort;
+			
+		
+                //update tails
+                Sorted_list->tails=Sorted_list->tails->prev;
+                Sorted_list->tails->next=NULL;
+                free(ptr);
+        }
+        value=deleted_Node_Value;
+        key=deleted_Node_Key;
+        return 1;
+}
+
 	       
 			
 }
