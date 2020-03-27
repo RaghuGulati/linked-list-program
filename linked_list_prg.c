@@ -73,18 +73,80 @@ void push(struct Node** head_ref, struct Node** head_sort_ref, int value_t, doub
     (*head_ref) = new_node;
 }  
 
+//append function of the program
+void append(struct Node** head_ref, struct Node** head_sort_ref, int value_t, double key_t)
+{
+    struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));  
+    struct Node* current = (struct Node*)malloc(sizeof(struct Node));
+    struct Node* last;
+    
+    last = *head_ref; 
+    new_node->data = value_t;
+    new_node->key = key_t;
+    new_node->next = NULL;
+
+    if (*head_ref == NULL)
+    {
+        new_node->prev = NULL;
+        *head_ref = new_node;
+        return;
+    }
+
+    while (last->next != NULL)
+        last = last->next;
+
+    last->next = new_node;
+
+    new_node->prev = last;
+
+    if (*head_sort_ref == NULL){
+	*head_sort_ref = new_node;
+    }
+
+    else {
+	    if ((*head_sort_ref)->key >= new_node->key) {
+	        new_node->sort = *head_sort_ref;
+	        new_node->sort->prev_sorted = new_node;
+	        *head_sort_ref = new_node;
+	    }
+	
+	    else {
+	        current = *head_sort_ref;
+	
+	        // locate the node after which the new node is to be inserted
+	        while (current->sort != NULL && current->sort->key < new_node->key){
+	            current = current->sort;
+		}
+
+	        /* Make the appropriate links */
+	        new_node->sort = current->sort;
+	
+	        // if the new node is not inserted at the end of the list
+	        if (current->sort != NULL){
+	            new_node->sort->prev_sorted = new_node;
+		}
+
+	        current->sort = new_node;
+	        new_node->prev_sorted = current;
+	    }
+    }
+
+}
+
+
+
 //Function to print the list according to insertion order as well as key sort order
 void printList(struct Node* node, struct Node* node_sort)  
 {  
     struct Node* last;  
-    printf("List by insertion order: ");
+    printf("List by insertion order: \n");
     while (node != NULL) {  
         printf(" (%d, %0.2f) ", node->data, node->key);  
         last = node;  
         node = node->next; 
     }
 
-    printf("\nList by ke sort order: ");
+    printf("\nList by ke sort order: \n");
     while (node_sort != NULL) {  
         printf(" (%d, %0.2f) ", node_sort->data, node_sort->key);  
         last = node_sort;  
@@ -108,14 +170,15 @@ int main()
     push(&head, &head_sort,  6, 1.65);
     push(&head, &head_sort,  8, 1.4);
     push(&head, &head_sort,  5, 0.92);
-    push(&head, &head_sort,  15, 0.59);
+    append(&head, &head_sort,  15, 0.59);
     push(&head, &head_sort,  6, 0.50);
     push(&head, &head_sort,  12, 1.26);
     push(&head, &head_sort,  7, 0.65);
+    append(&head, &head_sort, 14, 0.58);
     printList(head, head_sort);  
   
     int sz = size(head);
-    printf("\nSize of linked list: %d \n", sz);
+    printf("\nSize of linked list: %d", sz);
 
     getchar();  
     return 0;  
