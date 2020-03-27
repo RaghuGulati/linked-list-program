@@ -175,7 +175,7 @@ void printList(struct Node* node, struct Node* node_sort)
  *@param value_t
  *@param key_t *
  */
-int remove_first(Sorted_list *,value_t *, key_t *)
+int remove_first(Sorted_list * ADT,value_t * value, key_t * key)
 {
 	struct Node *ptr;
 	value_t deleted_Node_Value;
@@ -186,9 +186,11 @@ int remove_first(Sorted_list *,value_t *, key_t *)
 	else if(Sorted_list->head->next==NULL){
 		deleted_Node_Value=Sorted_list->head->value;
 		deleted_Node_Key=Sorted_list->head->key;
-		Sorted_list->head_sort->next->prev=Sorted_list-head_sort->prev;
-		Sorted_list->head_sort->prev->next=Sorted_list->head_sort->next;
+		//onlt one element in list
 		Sorted_list->head= NULL
+		Sorted_list->head_sort=NULL;
+		Sorted_list->tails=NULL;
+		Sorted_list->tails_sort=NULL;
 		free(Sorted_list->head);
 		printf("\nNode deleted\n");
 	}
@@ -196,12 +198,17 @@ int remove_first(Sorted_list *,value_t *, key_t *)
 		ptr =Sorted_list->head;
 		deleted_Node_Value=Sorted_list->head->value;
                 deleted_Node_Key=Sorted_list->head->key;
-          	Sorted_list->head_sort->next->prev=Sorted_list-head_sort->prev;
-                Sorted_list->head_sort->prev->next=Sorted_list->head_sort->next;
-		Sorted_list->head=Sorted_list->head->next;
+		//update head_sort
+		Sorted_list->head->sort->prev=Sorted_list->head->prev_sorted;
+		Sorted_list->head->prev_sorted->sort=Sorted_list->head->sort;
+		//update head
+                Sorted_list->head=Sorted_list->head->next;
 		Sorted_list->head->prev=NULL;
 		free(ptr);
 	}
+	value=deleted_Node_Value;
+	key=deleted_Node_Key;
+	return 1;
 }
 	       
 			
