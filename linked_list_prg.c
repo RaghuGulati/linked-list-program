@@ -9,13 +9,13 @@ struct Node {
     struct Node* prev_sorted, *sort;
 };  
 //Sorted_list data type
-typedef struct Sorted_list{
-    struct Node* head= NULL;
-    struct Node * head_sort=NULL;
-    struct Node *tails=NULL;
-    struct Node * tails_sort=NULL;
+typedef struct {
+    struct Node* head;
+    struct Node * head_sort;
+    struct Node *tails;
+    struct Node * tails_sort;
     int size ;//store the node count
-};
+}Sorted_list;
 //size function to calculate the size of linked list
 int size(struct Node* head) {
    int length = 0;
@@ -175,7 +175,7 @@ void printList(struct Node* node, struct Node* node_sort)
  *@param value_t
  *@param key_t *
  */
-int remove_first(Sorted_list *,value_t *, key_t *)
+int remove_first(Sorted_list * ADT,value_t * value, key_t * key)
 {
 	struct Node *ptr;
 	value_t deleted_Node_Value;
@@ -186,9 +186,11 @@ int remove_first(Sorted_list *,value_t *, key_t *)
 	else if(Sorted_list->head->next==NULL){
 		deleted_Node_Value=Sorted_list->head->value;
 		deleted_Node_Key=Sorted_list->head->key;
-		Sorted_list->head_sort->next->prev=Sorted_list-head_sort->prev;
-		Sorted_list->head_sort->prev->next=Sorted_list->head_sort->next;
+		//onlt one element in list
 		Sorted_list->head= NULL
+		Sorted_list->head_sort=NULL;
+		Sorted_list->tails=NULL;
+		Sorted_list->tails_sort=NULL;
 		free(Sorted_list->head);
 		printf("\nNode deleted\n");
 	}
@@ -196,22 +198,77 @@ int remove_first(Sorted_list *,value_t *, key_t *)
 		ptr =Sorted_list->head;
 		deleted_Node_Value=Sorted_list->head->value;
                 deleted_Node_Key=Sorted_list->head->key;
-          	Sorted_list->head_sort->next->prev=Sorted_list-head_sort->prev;
-                Sorted_list->head_sort->prev->next=Sorted_list->head_sort->next;
-		Sorted_list->head=Sorted_list->head->next;
+		//update head_sort
+		Sorted_list->head->sort->prev=Sorted_list->head->prev_sorted;
+		if(Sorted_list->head->prev_sorted != NULL){//if head and head_sort are same
+			Sorted_list->head->prev_sorted->sort=Sorted_list->head->sort;
+		}
+		//update head
+                Sorted_list->head=Sorted_list->head->next;
 		Sorted_list->head->prev=NULL;
 		free(ptr);
 	}
+	value=deleted_Node_Value;
+	key=deleted_Node_Key;
+	return 1;
 }
+/*
+ *function to remove last  node
+ *@param Sorted_list *
+ *@param value_t
+ *@param key_t *
+ */
+int remove_last(Sorted_list * ADT,value_t * value, key_t * key)
+{
+        struct Node *ptr;
+        value_t deleted_Node_Value;
+        key_t   deleted_Node_Key;
+        if(Sorted_list->tails == NULL){
+                printf("\n UNDERFLOW");
+        }
+        else if(Sorted_list->tails->prev==NULL){
+                deleted_Node_Value=Sorted_list->tails->value;
+                deleted_Node_Key=Sorted_list->tails->key;
+                //onlt one element in list
+                Sorted_list->tails= NULL
+                Sorted_list->tail_sort=NULL;
+                Sorted_list->head=NULL;
+                Sorted_list->head_sort=NULL;
+                free(Sorted_list->tails);
+                printf("\nNode deleted\n");
+        }
+        else{
+                ptr =Sorted_list->tails;
+                deleted_Node_Value=Sorted_list->tails->value;
+                deleted_Node_Key=Sorted_list->tails->key;
+                //update tails_sort
+		if(Sorted_list->tails->sort != NULL){// if tails and tail_sort are same
+                
+			Sorted_list->tails->sort->prev=Sorted_list->tails->prev_sorted;
+		}
+		Sorted_list->tails->prev_sorted->sort=Sorted_list->tails->sort;
+			
+		
+                //update tails
+                Sorted_list->tails=Sorted_list->tails->prev;
+                Sorted_list->tails->next=NULL;
+                free(ptr);
+        }
+        value=deleted_Node_Value;
+        key=deleted_Node_Key;
+        return 1;
+}
+
 	       
 			
-}
+
 /* Main function of the program*/
 int main()  
 {  
     /* initilizing head and head_sort for the linked list */
     struct Node* head = NULL;
     struct Node* head_sort = NULL;
+    Sorted_list * list_detail=(Sorted_list *)malloc(sizeof(Sorted_list));
 
     //struct Node
     push(&head, &head_sort,  7, 0.62);  
