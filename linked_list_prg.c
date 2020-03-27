@@ -8,7 +8,14 @@ struct Node {
     struct Node* prev, *next;
     struct Node* prev_sorted, *sort;
 };  
-
+//Sorted_list data type
+typedef struct Sorted_list{
+    struct Node* head= NULL;
+    struct Node * head_sort=NULL;
+    struct Node *tails=NULL;
+    struct Node * tails_sort=NULL;
+    int size ;//store the node count
+};
 //size function to calculate the size of linked list
 int size(struct Node* head) {
    int length = 0;
@@ -65,7 +72,7 @@ void push(struct Node** head_ref, struct Node** head_sort_ref, int value_t, doub
 	        if (current->sort != NULL){
 	            new_node->sort->prev_sorted = new_node;
 		}
-
+		
 	        current->sort = new_node;
 	        new_node->prev_sorted = current;
 	    }
@@ -154,8 +161,51 @@ void printList(struct Node* node, struct Node* node_sort)
     }
 
 
-}  
-  
+}
+
+/*
+ *function to find  node by key
+ *@param Sorted_list *
+ *@param key_t *
+ */
+//TODO
+/*
+ *function to remove first node
+ *@param Sorted_list *
+ *@param value_t
+ *@param key_t *
+ */
+int remove_first(Sorted_list *,value_t *, key_t *)
+{
+	struct Node *ptr;
+	value_t deleted_Node_Value;
+        key_t 	deleted_Node_Key;
+	if(Sorted_list->head == NULL){
+		printf("\n UNDERFLOW");
+	}
+	else if(Sorted_list->head->next==NULL){
+		deleted_Node_Value=Sorted_list->head->value;
+		deleted_Node_Key=Sorted_list->head->key;
+		Sorted_list->head_sort->next->prev=Sorted_list-head_sort->prev;
+		Sorted_list->head_sort->prev->next=Sorted_list->head_sort->next;
+		Sorted_list->head= NULL
+		free(Sorted_list->head);
+		printf("\nNode deleted\n");
+	}
+	else{
+		ptr =Sorted_list->head;
+		deleted_Node_Value=Sorted_list->head->value;
+                deleted_Node_Key=Sorted_list->head->key;
+          	Sorted_list->head_sort->next->prev=Sorted_list-head_sort->prev;
+                Sorted_list->head_sort->prev->next=Sorted_list->head_sort->next;
+		Sorted_list->head=Sorted_list->head->next;
+		Sorted_list->head->prev=NULL;
+		free(ptr);
+	}
+}
+	       
+			
+}
 /* Main function of the program*/
 int main()  
 {  
