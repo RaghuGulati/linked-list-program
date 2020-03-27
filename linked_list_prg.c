@@ -175,37 +175,37 @@ void printList(struct Node* node, struct Node* node_sort)
  *@param value_t
  *@param key_t *
  */
-int remove_first(Sorted_list * ADT,value_t * value, key_t * key)
+int remove_first(Sorted_list * list_detail,value_t * value, key_t * key)
 {
 	struct Node *ptr;
 	value_t deleted_Node_Value;
         key_t 	deleted_Node_Key;
-	if(Sorted_list->head == NULL){
+	if(list_detail->head == NULL){
 		printf("\n UNDERFLOW");
 	}
-	else if(Sorted_list->head->next==NULL){
-		deleted_Node_Value=Sorted_list->head->value;
-		deleted_Node_Key=Sorted_list->head->key;
+	else if(list_detail->head->next==NULL){
+		deleted_Node_Value=list_detail->head->value;
+		deleted_Node_Key=list_detail->head->key;
 		//onlt one element in list
-		Sorted_list->head= NULL
-		Sorted_list->head_sort=NULL;
-		Sorted_list->tails=NULL;
-		Sorted_list->tails_sort=NULL;
-		free(Sorted_list->head);
+		list_detail->head= NULL
+		list_detail->head_sort=NULL;
+		list_detail->tails=NULL;
+		list_detail->tails_sort=NULL;
+		free(list_detail->head);
 		printf("\nNode deleted\n");
 	}
 	else{
-		ptr =Sorted_list->head;
-		deleted_Node_Value=Sorted_list->head->value;
-                deleted_Node_Key=Sorted_list->head->key;
+		ptr =list_detail->head;
+		deleted_Node_Value=list_detail->head->value;
+                deleted_Node_Key=list_detail->head->key;
 		//update head_sort
-		Sorted_list->head->sort->prev=Sorted_list->head->prev_sorted;
-		if(Sorted_list->head->prev_sorted != NULL){//if head and head_sort are same
-			Sorted_list->head->prev_sorted->sort=Sorted_list->head->sort;
+		list_detail->head->sort->prev=list_detail->head->prev_sorted;
+		if(list_detail->head->prev_sorted != NULL){//if head and head_sort are same
+			list_detail->head->prev_sorted->sort=list_detail->head->sort;
 		}
 		//update head
-                Sorted_list->head=Sorted_list->head->next;
-		Sorted_list->head->prev=NULL;
+                list_detail->head=list_detail->head->next;
+		list_detail->head->prev=NULL;
 		free(ptr);
 	}
 	value=deleted_Node_Value;
@@ -218,40 +218,40 @@ int remove_first(Sorted_list * ADT,value_t * value, key_t * key)
  *@param value_t
  *@param key_t *
  */
-int remove_last(Sorted_list * ADT,value_t * value, key_t * key)
+int remove_last(Sorted_list * list_detail,value_t * value, key_t * key)
 {
         struct Node *ptr;
         value_t deleted_Node_Value;
         key_t   deleted_Node_Key;
-        if(Sorted_list->tails == NULL){
+        if(list_detail->tails == NULL){
                 printf("\n UNDERFLOW");
         }
-        else if(Sorted_list->tails->prev==NULL){
-                deleted_Node_Value=Sorted_list->tails->value;
-                deleted_Node_Key=Sorted_list->tails->key;
+        else if(list_detail->tails->prev==NULL){
+                deleted_Node_Value=list_detail->tails->value;
+                deleted_Node_Key=list_detail->tails->key;
                 //onlt one element in list
-                Sorted_list->tails= NULL
-                Sorted_list->tail_sort=NULL;
-                Sorted_list->head=NULL;
-                Sorted_list->head_sort=NULL;
-                free(Sorted_list->tails);
+                list_detail->tails= NULL
+                list_detail->tail_sort=NULL;
+                list_detail->head=NULL;
+                list_detail->head_sort=NULL;
+                free(list_detail->tails);
                 printf("\nNode deleted\n");
         }
         else{
-                ptr =Sorted_list->tails;
-                deleted_Node_Value=Sorted_list->tails->value;
-                deleted_Node_Key=Sorted_list->tails->key;
+                ptr =list_detail->tails;
+                deleted_Node_Value=list_detail->tails->value;
+                deleted_Node_Key=list_detail->tails->key;
                 //update tails_sort
-		if(Sorted_list->tails->sort != NULL){// if tails and tail_sort are same
+		if(list_detail->tails->sort != NULL){// if tails and tail_sort are same
                 
-			Sorted_list->tails->sort->prev=Sorted_list->tails->prev_sorted;
+			list_detail->tails->sort->prev=list_detail->tails->prev_sorted;
 		}
-		Sorted_list->tails->prev_sorted->sort=Sorted_list->tails->sort;
+		list_detail->tails->prev_sorted->sort=list_detail->tails->sort;
 			
 		
                 //update tails
-                Sorted_list->tails=Sorted_list->tails->prev;
-                Sorted_list->tails->next=NULL;
+                list_detail->tails=list_detail->tails->prev;
+                list_detail->tails->next=NULL;
                 free(ptr);
         }
         value=deleted_Node_Value;
