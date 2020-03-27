@@ -1,19 +1,22 @@
 #include <stdio.h>  
 #include <stdlib.h>  
 
+typedef int value_t;
+  
 // A linked list node  
 struct Node {  
-    int data;
-    double key;
+    int value;
+    key_t key;
     struct Node* prev, *next;
     struct Node* prev_sorted, *sort;
 };  
+
 //Sorted_list data type
 typedef struct {
     struct Node* head;
-    struct Node * head_sort;
-    struct Node *tails;
-    struct Node * tails_sort;
+    struct Node* head_sort;
+    struct Node* tails;
+    struct Node* tails_sort;
     int size ;//store the node count
 }Sorted_list;
 //size function to calculate the size of linked list
@@ -29,36 +32,41 @@ int size(struct Node* head) {
 }
 
 /*push function to add the node to the head of the list*/
-void push(struct Node** head_ref, struct Node** head_sort_ref, int value_t, double key_t)  
+void push(Sorted_list * list_detail, value_t  value, key_t  key)  
 {  
     struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));  
     struct Node* current = (struct Node*)malloc(sizeof(struct Node));
  
-    new_node->data = value_t;
-    new_node->key = key_t;
+    new_node->value = value;
+    new_node->key = key;
   
-    new_node->next = (*head_ref);
+    new_node->next = list_detail->head;
     new_node->prev = NULL;
 
     new_node->sort = NULL;
     new_node->prev_sorted = NULL;
 
-    if (*head_sort_ref == NULL){
-        *head_ref = new_node;
-	*head_sort_ref = new_node;
+    if (list_detail->head == NULL){
+        list_detail->head = new_node;
+    }
+
+    else{
+	    list_detail->head->prev = new_node;
+    }
+	
+    if(list_detail->head_sort == NULL){
+	    list_detail->head_sort = new_node;
     }
 
     else {
-	    (*head_ref)->prev = new_node;
-
-	    if ((*head_sort_ref)->key >= new_node->key) {
-	        new_node->sort = *head_sort_ref;
+	    if (list_detail->head_sort->key >= new_node->key) {
+	        new_node->sort = list_detail->head_sort;
 	        new_node->sort->prev_sorted = new_node;
-	        *head_sort_ref = new_node;
+	        list_detail->head_sort = new_node;
 	    }
 	
 	    else {
-	        current = *head_sort_ref;
+	        current = list_detail->head_sort;
 	
 	        // locate the node after which the new node is to be inserted
 	        while (current->sort != NULL && current->sort->key < new_node->key){
@@ -77,91 +85,31 @@ void push(struct Node** head_ref, struct Node** head_sort_ref, int value_t, doub
 	        new_node->prev_sorted = current;
 	    }
     }
-    (*head_ref) = new_node;
+    list_detail->head = new_node;
 }  
 
-//append function of the program
-void append(struct Node** head_ref, struct Node** head_sort_ref, int value_t, double key_t)
-{
-    struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));  
-    struct Node* current = (struct Node*)malloc(sizeof(struct Node));
-    struct Node* last;
-    
-    last = *head_ref; 
-    new_node->data = value_t;
-    new_node->key = key_t;
-    new_node->next = NULL;
-
-    if (*head_ref == NULL)
-    {
-        new_node->prev = NULL;
-        *head_ref = new_node;
-        return;
-    }
-
-    while (last->next != NULL)
-        last = last->next;
-
-    last->next = new_node;
-
-    new_node->prev = last;
-
-    if (*head_sort_ref == NULL){
-	*head_sort_ref = new_node;
-    }
-
-    else {
-	    if ((*head_sort_ref)->key >= new_node->key) {
-	        new_node->sort = *head_sort_ref;
-	        new_node->sort->prev_sorted = new_node;
-	        *head_sort_ref = new_node;
-	    }
-	
-	    else {
-	        current = *head_sort_ref;
-	
-	        // locate the node after which the new node is to be inserted
-	        while (current->sort != NULL && current->sort->key < new_node->key){
-	            current = current->sort;
-		}
-
-	        /* Make the appropriate links */
-	        new_node->sort = current->sort;
-	
-	        // if the new node is not inserted at the end of the list
-	        if (current->sort != NULL){
-	            new_node->sort->prev_sorted = new_node;
-		}
-
-	        current->sort = new_node;
-	        new_node->prev_sorted = current;
-	    }
-    }
-
-}
-
-
-
 //Function to print the list according to insertion order as well as key sort order
-void printList(struct Node* node, struct Node* node_sort)  
+void printList(Sorted_list * list_detail)  
 {  
     struct Node* last;  
+    struct Node* node;
+    struct Node* n2 = (struct Node*)malloc(sizeof(struct Node));
+
+    node = list_detail->head;
     printf("List by insertion order: \n");
     while (node != NULL) {  
-        printf(" (%d, %0.2f) ", node->data, node->key);  
-        last = node;  
+        printf(" (%d, %d) ", node->value, node->key);  
         node = node->next; 
     }
+    printf("\nList by key_sort order: \n");
 
-    printf("\nList by ke sort order: \n");
-    while (node_sort != NULL) {  
-        printf(" (%d, %0.2f) ", node_sort->data, node_sort->key);  
-        last = node_sort;  
-        node_sort = node_sort->sort; 
+    n2 = list_detail->head_sort;
+    while (n2 != NULL) {  
+        printf(" (%d, %d) ", n2->value, n2->key); 
+        n2 = n2->next; 
     }
 
-
-}
+    }
 
 /*
  *function to find  node by key
@@ -187,7 +135,7 @@ int remove_first(Sorted_list * list_detail,value_t * value, key_t * key)
 		deleted_Node_Value=list_detail->head->value;
 		deleted_Node_Key=list_detail->head->key;
 		//onlt one element in list
-		list_detail->head= NULL
+		list_detail->head= NULL;
 		list_detail->head_sort=NULL;
 		list_detail->tails=NULL;
 		list_detail->tails_sort=NULL;
@@ -230,8 +178,8 @@ int remove_last(Sorted_list * list_detail,value_t * value, key_t * key)
                 deleted_Node_Value=list_detail->tails->value;
                 deleted_Node_Key=list_detail->tails->key;
                 //onlt one element in list
-                list_detail->tails= NULL
-                list_detail->tail_sort=NULL;
+                list_detail->tails= NULL;
+                list_detail->tails_sort=NULL;
                 list_detail->head=NULL;
                 list_detail->head_sort=NULL;
                 free(list_detail->tails);
@@ -358,27 +306,25 @@ int remove_largest_key(Sorted_list * list_detail,value_t * value, key_t * key)
 int main()  
 {  
     /* initilizing head and head_sort for the linked list */
-    struct Node* head = NULL;
-    struct Node* head_sort = NULL;
     Sorted_list * list_detail=(Sorted_list *)malloc(sizeof(Sorted_list));
 
     //struct Node
-    push(&head, &head_sort,  7, 0.62);  
-    push(&head, &head_sort,  1, 1.95);  
-    push(&head, &head_sort,  4, 1.85);
-    push(&head, &head_sort,  6, 1.65);
-    push(&head, &head_sort,  8, 1.4);
-    push(&head, &head_sort,  5, 0.92);
-    append(&head, &head_sort,  15, 0.59);
-    push(&head, &head_sort,  6, 0.50);
-    push(&head, &head_sort,  12, 1.26);
-    push(&head, &head_sort,  7, 0.65);
-    append(&head, &head_sort, 14, 0.58);
-    printList(head, head_sort);  
-  
-    int sz = size(head);
-    printf("\nSize of linked list: %d", sz);
+    push(list_detail,  7, 62);  
+    push(list_detail,  7, 2);  
+    push(list_detail,  5, 1);
+    push(list_detail,  7, 26);  
+    push(list_detail,  17, 162);  
+    push(list_detail,  7, 612);  
+    push(list_detail,  7, 42);  
+//    push(list_detail,  7, 12);  
+//    push(list_detail,  7, 0);  
 
+    //append(&head, &head_sort,  15, 0.59);
+    /*append(&head, &head_sort, 14, 0.58);*/
+    printList(list_detail);  
+  
+    //int sz = size(head);
+    //printf("\nSize of linked list: %d", sz);
     getchar();  
     return 0;  
 }  
