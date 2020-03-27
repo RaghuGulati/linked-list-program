@@ -7,8 +7,10 @@ typedef int value_t;
 struct Node {  
     int value;
     key_t key;
-    struct Node* prev, *next;
-    struct Node* prev_sorted, *sort;
+    struct Node* prev;
+    struct Node* next;
+    struct Node* prev_sorted;
+    struct Node* sort;
 };  
 
 //Sorted_list data type
@@ -30,6 +32,7 @@ int size(struct Node* head) {
 	
    return length;
 }
+void printList(Sorted_list * list_detail);
 
 /*push function to add the node to the head of the list*/
 void push(Sorted_list * list_detail, value_t  value, key_t  key)  
@@ -48,6 +51,7 @@ void push(Sorted_list * list_detail, value_t  value, key_t  key)
 
     if (list_detail->head == NULL){
         list_detail->head = new_node;
+	list_detail->tails=new_node;
     }
 
     else{
@@ -56,33 +60,55 @@ void push(Sorted_list * list_detail, value_t  value, key_t  key)
 	
     if(list_detail->head_sort == NULL){
 	    list_detail->head_sort = new_node;
+	    list_detail->tails_sort=new_node;
     }
 
-    else {
+    else { printf("\nshiv\n");
+	       printList(list_detail);
+
 	    if (list_detail->head_sort->key >= new_node->key) {
 	        new_node->sort = list_detail->head_sort;
 	        new_node->sort->prev_sorted = new_node;
 	        list_detail->head_sort = new_node;
 	    }
-	
+
 	    else {
 	        current = list_detail->head_sort;
-	
+		int i=0;
+		struct Node* previous=(struct Node*)malloc(sizeof(struct Node));
 	        // locate the node after which the new node is to be inserted
-	        while (current->sort != NULL && current->sort->key < new_node->key){
-	            current = current->sort;
-		}
+	        while (current != NULL && current->key <= new_node->key){
+		    previous=current;
 
+		    printf("\n%d\n",current->value);
+	            current =current->sort;
+		    if(current == NULL){
+			    break;
+		    }
+		}
+		printf("hhd");
 	        /* Make the appropriate links */
-	        new_node->sort = current->sort;
-	
+	        new_node->sort = current;
+		printf("next to new node %d",new_node->sort->value);	
 	        // if the new node is not inserted at the end of the list
-	        if (current->sort != NULL){
-	            new_node->sort->prev_sorted = new_node;
+	        if (current != NULL){
+			
+	            	new_node->prev_sorted=current->prev_sorted;
+			current->prev_sorted = new_node;
+			//new_node->prev_sorted->sort=new_node;
+			previous->sort=new_node;
+			printf("\ncurrent value from prevoius %d\n",previous->sort->value);
+		}else{
+			new_node->prev_sorted=previous;
+			previous->sort=new_node;
+			list_detail->tails_sort=new_node;
+
 		}
 		
-	        current->sort = new_node;
-	        new_node->prev_sorted = current;
+	        //current->sort = new_node;
+	        //new_node->prev_sorted = current;
+		//current->sort =new_node;
+		
 	    }
     }
     list_detail->head = new_node;
@@ -106,7 +132,7 @@ void printList(Sorted_list * list_detail)
     n2 = list_detail->head_sort;
     while (n2 != NULL) {  
         printf(" (%d, %d) ", n2->value, n2->key); 
-        n2 = n2->next; 
+        n2 = n2->sort; 
     }
 
     }
@@ -156,8 +182,8 @@ int remove_first(Sorted_list * list_detail,value_t * value, key_t * key)
 		list_detail->head->prev=NULL;
 		free(ptr);
 	}
-	value=deleted_Node_Value;
-	key=deleted_Node_Key;
+	*value=deleted_Node_Value;
+	*key=deleted_Node_Key;
 	return 1;
 }
 /*
@@ -190,20 +216,23 @@ int remove_last(Sorted_list * list_detail,value_t * value, key_t * key)
                 deleted_Node_Value=list_detail->tails->value;
                 deleted_Node_Key=list_detail->tails->key;
                 //update tails_sort
-		if(list_detail->tails->sort != NULL){// if tails and tail_sort are same
+		if(list_detail->tails->sort != NULL){// check tails and tails_sort are same
                 
 			list_detail->tails->sort->prev=list_detail->tails->prev_sorted;
+			list_detail->tails->prev_sorted->sort=list_detail->tails->sort;
 		}
-		list_detail->tails->prev_sorted->sort=list_detail->tails->sort;
-			
+		else{
+			list_detail->tails->prev_sorted->sort=NULL;
+		}
+
 		
                 //update tails
                 list_detail->tails=list_detail->tails->prev;
                 list_detail->tails->next=NULL;
                 free(ptr);
         }
-        value=deleted_Node_Value;
-        key=deleted_Node_Key;
+        *value=deleted_Node_Value;
+        *key=deleted_Node_Key;
         return 1;
 }
 
@@ -225,7 +254,7 @@ int remove_smallest_key(Sorted_list * list_detail,value_t * value, key_t * key)
 		deleted_Node_Value=list_detail->head_sort->value;
 		deleted_Node_Key=list_detail->head_sort->key;
 		//onlt one element in list
-		list_detail->head_sort= NULL
+		list_detail->head_sort= NULL;
 		list_detail->head=NULL;
 		list_detail->tails=NULL;
 		list_detail->tails_sort=NULL;
@@ -246,8 +275,8 @@ int remove_smallest_key(Sorted_list * list_detail,value_t * value, key_t * key)
 		list_detail->head_sort->prev_sorted=NULL;
 		free(ptr);
 	}
-	value=deleted_Node_Value;
-	key=deleted_Node_Key;
+	*value=deleted_Node_Value;
+	*key=deleted_Node_Key;
 	return 1;
 }
 
@@ -262,39 +291,39 @@ int remove_largest_key(Sorted_list * list_detail,value_t * value, key_t * key)
         struct Node *ptr;
         value_t deleted_Node_Value;
         key_t   deleted_Node_Key;
-        if(list_detail->tail_sort == NULL){
+        if(list_detail->tails_sort == NULL){
                 printf("\n UNDERFLOW");
         }
-        else if(list_detail->tail_sort->prev==NULL){
-                deleted_Node_Value=list_detail->tail_sort->value;
-                deleted_Node_Key=list_detail->tail_sort->key;
+        else if(list_detail->tails_sort->prev==NULL){
+                deleted_Node_Value=list_detail->tails_sort->value;
+                deleted_Node_Key=list_detail->tails_sort->key;
                 //onlt one element in list
-                list_detail->tails= NULL
-                list_detail->tail_sort=NULL;
+                list_detail->tails= NULL;
+                list_detail->tails_sort=NULL;
                 list_detail->head=NULL;
                 list_detail->head_sort=NULL;
-                free(list_detail->tail_sort);
+                free(list_detail->tails_sort);
                 printf("\nNode deleted\n");
         }
         else{
-                ptr =list_detail->tail_sort;
-                deleted_Node_Value=list_detail->tail_sort->value;
-                deleted_Node_Key=list_detail->tail_sort->key;
+                ptr =list_detail->tails_sort;
+                deleted_Node_Value=list_detail->tails_sort->value;
+                deleted_Node_Key=list_detail->tails_sort->key;
                 //update tails
-                if(list_detail->tail_sort->next != NULL){// if tails and tail_sort are same
+                if(list_detail->tails_sort->next != NULL){// if tails and tails_sort are same
 
-                        list_detail->tail_sort->next->prev=list_detail->tail_sort->prev;
+                        list_detail->tails_sort->next->prev=list_detail->tails_sort->prev;
                 }
-                list_detail->tail_sort->prev->next=list_detail->tail_sort->next;
+                list_detail->tails_sort->prev->next=list_detail->tails_sort->next;
 
 
                 //update tails
-                list_detail->tail_sort=list_detail->tail_sort->prev;
-                list_detail->tail_sort->next=NULL;
+                list_detail->tails_sort=list_detail->tails_sort->prev;
+                list_detail->tails_sort->next=NULL;
                 free(ptr);
         }
-        value=deleted_Node_Value;
-        key=deleted_Node_Key;
+        *value=deleted_Node_Value;
+        *key=deleted_Node_Key;
         return 1;
 }
 
@@ -307,22 +336,51 @@ int main()
 {  
     /* initilizing head and head_sort for the linked list */
     Sorted_list * list_detail=(Sorted_list *)malloc(sizeof(Sorted_list));
-
+    list_detail->head=NULL;
+    list_detail->head_sort=NULL;
+    list_detail->tails=NULL;
+    list_detail->tails_sort=NULL;
     //struct Node
-    push(list_detail,  7, 62);  
-    push(list_detail,  7, 2);  
-    push(list_detail,  5, 1);
-    push(list_detail,  7, 26);  
-    push(list_detail,  17, 162);  
-    push(list_detail,  7, 612);  
+    push(list_detail,  1, 62);  
+    push(list_detail,  2, 5);  
+    push(list_detail,  3, 4);
+    push(list_detail,  4, 26);  
+    push(list_detail,  5, 2);  
+    push(list_detail,  6, 1);  
     push(list_detail,  7, 42);  
 //    push(list_detail,  7, 12);  
 //    push(list_detail,  7, 0);  
 
-    //append(&head, &head_sort,  15, 0.59);
+  //  append(&head, &head_sort,  15, );
     /*append(&head, &head_sort, 14, 0.58);*/
     printList(list_detail);  
-  
+    int value,key;
+    printf("remove_first");
+   remove_first(list_detail,&value,&key);
+
+    printf("remove_first %d  %d",value,key);
+   
+    printList(list_detail);  
+    
+        printf("remove_last");
+   remove_last(list_detail,&value,&key);
+
+    printf("remove_last %d  %d",value,key);
+   
+    printList(list_detail);  
+     printf("remove_smallest_key");
+   remove_smallest_key(list_detail,&value,&key);
+
+    printf("remove_smallest_key %d  %d",value,key);
+   
+    printList(list_detail);  
+     printf("remove_largest_key");
+   remove_largest_key(list_detail,&value,&key);
+
+    printf("remove_largest_key %d  %d",value,key);
+   
+    printList(list_detail);  
+ 
     //int sz = size(head);
     //printf("\nSize of linked list: %d", sz);
     getchar();  
