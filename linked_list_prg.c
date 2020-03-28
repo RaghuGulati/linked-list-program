@@ -241,9 +241,14 @@ int remove_first(Sorted_list * list_detail,value_t * value, key_t * key)
 		deleted_Node_Value=list_detail->head->value;
                 deleted_Node_Key=list_detail->head->key;
 		//update head_sort
-		list_detail->head->sort->prev=list_detail->head->prev_sorted;
 		if(list_detail->head->prev_sorted != NULL){//if head and head_sort are same
 			list_detail->head->prev_sorted->sort=list_detail->head->sort;
+		        list_detail->head->sort->prev_sorted=list_detail->head->prev_sorted;
+		}
+		else{
+			list_detail->head->sort->prev_sorted=NULL;
+			list_detail->head_sort=list_detail->head_sort->sort;
+
 		}
 		//update head
                 list_detail->head=list_detail->head->next;
@@ -286,11 +291,12 @@ int remove_last(Sorted_list * list_detail,value_t * value, key_t * key)
                 //update tails_sort
 		if(list_detail->tails->sort != NULL){// check tails and tails_sort are same
                 
-			list_detail->tails->sort->prev=list_detail->tails->prev_sorted;
+			list_detail->tails->sort->prev_sorted=list_detail->tails->prev_sorted;
 			list_detail->tails->prev_sorted->sort=list_detail->tails->sort;
 		}
 		else{
 			list_detail->tails->prev_sorted->sort=NULL;
+			list_detail->tails_sort=list_detail->tails_sort->prev_sorted;
 		}
 
 		
@@ -333,12 +339,18 @@ int remove_smallest_key(Sorted_list * list_detail,value_t * value, key_t * key)
 		ptr =list_detail->head_sort;
 		deleted_Node_Value=list_detail->head_sort->value;
                 deleted_Node_Key=list_detail->head_sort->key;
-		//update head_sort
+		//update head
 		list_detail->head_sort->next->prev=list_detail->head_sort->prev;
-		if(list_detail->head_sort->prev != NULL){//if head and head_sort are same
+		if(list_detail->head_sort->prev != NULL){//check head and head_sort are same
 			list_detail->head_sort->prev->next=list_detail->head->next;
 		}
-		//update head
+		else{
+			list_detail->head_sort->next->prev=NULL;
+			list_detail->head= list_detail->head->next;
+
+
+		}
+		//update head_sort
                 list_detail->head_sort=list_detail->head_sort->sort;
 		list_detail->head_sort->prev_sorted=NULL;
 		free(ptr);
@@ -378,16 +390,21 @@ int remove_largest_key(Sorted_list * list_detail,value_t * value, key_t * key)
                 deleted_Node_Value=list_detail->tails_sort->value;
                 deleted_Node_Key=list_detail->tails_sort->key;
                 //update tails
-                if(list_detail->tails_sort->next != NULL){// if tails and tails_sort are same
+                if(list_detail->tails_sort->next != NULL){//  check  tails and tails_sort are same
 
                         list_detail->tails_sort->next->prev=list_detail->tails_sort->prev;
+                        list_detail->tails_sort->prev->next=list_detail->tails_sort->next;
                 }
-                list_detail->tails_sort->prev->next=list_detail->tails_sort->next;
+		else{
+			list_detail->tails_sort->prev->next=NULL;
+			list_detail->tails=list_detail->tails->prev;
+
+		}
 
 
-                //update tails
-                list_detail->tails_sort=list_detail->tails_sort->prev;
-                list_detail->tails_sort->next=NULL;
+                //update tails_sort
+                list_detail->tails_sort=list_detail->tails_sort->prev_sorted;
+                list_detail->tails_sort->sort=NULL;
                 free(ptr);
         }
         *value=deleted_Node_Value;
