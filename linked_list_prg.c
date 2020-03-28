@@ -63,9 +63,7 @@ void push(Sorted_list * list_detail, value_t  value, key_t  key)
 	    list_detail->tails_sort=new_node;
     }
 
-    else { printf("\nshiv\n");
-	       printList(list_detail);
-
+    else { 
 	    if (list_detail->head_sort->key >= new_node->key) {
 	        new_node->sort = list_detail->head_sort;
 	        new_node->sort->prev_sorted = new_node;
@@ -80,7 +78,6 @@ void push(Sorted_list * list_detail, value_t  value, key_t  key)
 	        while (current != NULL && current->key <= new_node->key){
 		    previous=current;
 
-		    printf("\n%d\n",current->value);
 	            current =current->sort;
 		    if(current == NULL){
 			    break;
@@ -138,9 +135,7 @@ void append(Sorted_list * list_detail, value_t  value, key_t  key){
 	    list_detail->tails_sort = new_node;
     }
 
-    else { printf("\nshiv\n");
-	       printList(list_detail);
-
+    else { 
 	    if (list_detail->head_sort->key >= new_node->key) {
 	        new_node->sort = list_detail->head_sort;
 	        new_node->sort->prev_sorted = new_node;
@@ -155,7 +150,6 @@ void append(Sorted_list * list_detail, value_t  value, key_t  key){
 	        while (current != NULL && current->key <= new_node->key){
 		    previous=current;
 
-		    printf("\n%d\n",current->value);
 	            current =current->sort;
 		    if(current == NULL){
 			    break;
@@ -401,10 +395,41 @@ int remove_largest_key(Sorted_list * list_detail,value_t * value, key_t * key)
         return 1;
 }
 
+void empty_list(Sorted_list * list_detail){
+    struct Node* node;
+    struct Node* node_sort;
+    node = list_detail->head;
+    node_sort = list_detail->head_sort;
+    while (node != NULL) {  
+       	 node->value = 0;
+	 node->key = 0;
+	 node = node->next; 
+    }
+	
+    while (node_sort != NULL) {  
+       	 node_sort->value = 0;
+	 node_sort->key = 0;
+	 node_sort = node_sort->sort; 
+    }
 
+}
+
+void destroy_list(Sorted_list * list_detail){
+	struct Node* current = list_detail->head;
+	struct Node* current_sort = list_detail->head_sort;
+	struct Node* nxt = (struct Node *)malloc(sizeof(struct Node *));
+	struct Node* nxt_sort = (struct Node *)malloc(sizeof(struct Node *));
+
+	while(current!= NULL){
+		nxt = current->next;
+		free(current);
+		current = nxt;
+	}
+
+	list_detail->head = NULL;
+	list_detail->head_sort = NULL;
+}
 	       
-			
-
 /* Main function of the program*/
 int main()  
 {  
@@ -424,13 +449,14 @@ int main()
     push(list_detail,  6, 1);  
     push(list_detail,  7, 42);  
     append(list_detail,  7, 12);  
-//    push(list_detail,  7, 0);  
+//  push(list_detail,  7, 0);  
 
-  //  append(&head, &head_sort,  15, );
+  //append(&head, &head_sort,  15, );
     /*append(&head, &head_sort, 14, 0.58);*/
     printf("Final print list detail\n");
     printList(list_detail);  
     int value,key;
+
     printf("\nremove_first");
     remove_first(list_detail,&value,&key);
 
@@ -459,6 +485,15 @@ int main()
  
     //int sz = size(head);
     //printf("\nSize of linked list: %d", sz);
+
+
+    empty_list(list_detail);
+    printList(list_detail);
+
+    destroy_list(list_detail);
+    printList(list_detail);
+
+
     getchar();  
     return 0;  
 }  
