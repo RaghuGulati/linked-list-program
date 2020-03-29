@@ -1,0 +1,7 @@
+p 25 36
+a 18 18
+a 18 18
+p 36 25
+size
+print_sort
+print_all

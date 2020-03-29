@@ -1,5 +1,6 @@
 #include <stdio.h>  
 #include <stdlib.h>  
+#include<string.h>
 
 typedef int value_t;
   
@@ -21,12 +22,13 @@ typedef struct {
     struct Node* tails_sort;
     int size ;//store the node count
 }Sorted_list;
+
 //size function to calculate the size of linked list
-int size(struct Node* head) {
+int size(Sorted_list * list_detail) {
    int length = 0;
    struct Node *current;
 	
-   for(current = head; current != NULL; current = current->next){
+   for(current = list_detail->head; current != NULL; current = current->next){
       length++;
    }
 	
@@ -35,7 +37,7 @@ int size(struct Node* head) {
 void printList(Sorted_list * list_detail);
 
 /*push function to add the node to the head of the list*/
-void push(Sorted_list * list_detail, value_t  value, key_t  key)  
+int push(Sorted_list * list_detail, value_t  value, key_t  key)  
 {  
     struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));  
     struct Node* current = (struct Node*)malloc(sizeof(struct Node));
@@ -106,9 +108,11 @@ void push(Sorted_list * list_detail, value_t  value, key_t  key)
 	    }
     }
     list_detail->head = new_node;
+    list_detail->size += 1;
+    return 1;
 } 
 
-void append(Sorted_list * list_detail, value_t  value, key_t  key){
+int append(Sorted_list * list_detail, value_t  value, key_t  key){
     struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));  
     struct Node* current = (struct Node*)malloc(sizeof(struct Node));
  
@@ -178,32 +182,36 @@ void append(Sorted_list * list_detail, value_t  value, key_t  key){
 	    }
     }
     list_detail->tails = new_node;
-
+    list_detail->size += 1;   
+    return 1;
 }
 
 
 //Function to print the list according to insertion order as well as key sort order
 void printList(Sorted_list * list_detail)  
 {  
-    struct Node* last;  
     struct Node* node;
-    struct Node* n2 = (struct Node*)malloc(sizeof(struct Node));
-
+    
     node = list_detail->head;
-    printf("\nList by insertion order: \n");
+    printf("print_all:  Insertion Order \n");
     while (node != NULL) {  
-        printf(" (%d, %d) ", node->value, node->key);  
+        printf("     %d  %d\n", node->key, node->value);  
         node = node->next; 
     }
-    printf("\nList by key_sort order: \n");
 
+}
+
+void printList_sort(Sorted_list * list_detail){
+    struct Node* n2 = (struct Node*)malloc(sizeof(struct Node));
+	
+    printf("print_all:  Key Sort Order  \n");
     n2 = list_detail->head_sort;
     while (n2 != NULL) {  
-        printf(" (%d, %d) ", n2->value, n2->key); 
+        printf("     %d  %d\n", n2->key, n2->value);  
         n2 = n2->sort; 
     }
 
-    }
+}
 
 /*
  *function to find  node by key
@@ -428,7 +436,7 @@ void empty_list(Sorted_list * list_detail){
 	 node_sort->key = 0;
 	 node_sort = node_sort->sort; 
     }
-
+    list_detail->size = 0;
 }
 
 void destroy_list(Sorted_list * list_detail){
@@ -448,7 +456,7 @@ void destroy_list(Sorted_list * list_detail){
 }
 	       
 /* Main function of the program*/
-int main()  
+int main( int argc, char *argv[] )  
 {  
     /* initilizing head and head_sort for the linked list */
     Sorted_list * list_detail=(Sorted_list *)malloc(sizeof(Sorted_list));
@@ -456,60 +464,107 @@ int main()
     list_detail->head_sort=NULL;
     list_detail->tails=NULL;
     list_detail->tails_sort=NULL;
-    //struct Node
-    push(list_detail,  1, 62);  
-    push(list_detail,  2, 5);  
-    append(list_detail, 10, 13);
-    push(list_detail,  3, 4);
-    push(list_detail,  4, 26);  
-    push(list_detail,  5, 2);  
-    push(list_detail,  6, 1);  
-    push(list_detail,  7, 42);  
-    append(list_detail,  7, 12);  
-//  push(list_detail,  7, 0);  
+    int i = 0;    
+    char chunk[50];
+    char commands[50][50];
+    size_t malloc_size = 100;
+    value_t value;
+    key_t key;
+    int j = 0;
+    int k = 0;
+    char *a;
 
-  //append(&head, &head_sort,  15, );
-    /*append(&head, &head_sort, 14, 0.58);*/
-    printf("Final print list detail\n");
-    printList(list_detail);  
-    int value,key;
+    if(argc == 1){
+    	printf("input commands. press ctrl+D to stop entering inputs\n");
+	char *input_string;
+                size_t input_string_length = 50;
+                input_string = (char *) malloc(input_string_length);
 
-    printf("\nremove_first");
-    remove_first(list_detail,&value,&key);
+                printf("Enter records data and add EOF with Ctrl+D:\n");
 
-    printf("\nremove_first %d  %d",value,key);
-   
-    printList(list_detail);  
-    
-    printf("\nremove_last");
-    remove_last(list_detail,&value,&key);
+                while(getline(&input_string, &input_string_length, stdin) != -1)
+                {
+                        input_string[strcspn(input_string, "\n")] = 0;
+			strcpy(commands[i], input_string);
+			i++;
+		}
+    }
 
-    printf("\nremove_last %d  %d",value,key);
-   
-    printList(list_detail);  
-    printf("\nremove_smallest_key");
-    remove_smallest_key(list_detail,&value,&key);
+    else if(argc > 2){
+    	printf("Too many arguments supplied");
+    }
+    else{
+        FILE *fp;
+	fp = fopen(argv[1],"r");
 
-    printf("\nremove_smallest_key %d  %d",value,key);
-   
-    printList(list_detail);  
-    printf("\nremove_largest_key");
-    remove_largest_key(list_detail,&value,&key);
+	while(fgets(commands[i],50, fp) != NULL) {
+	        commands[i][strlen(commands[i]) -1] = '\0';
+		i++;
+	}
+    }
 
-    printf("\nremove_largest_key %d  %d",value,key);
-   
-    printList(list_detail);  
- 
-    //int sz = size(head);
-    //printf("\nSize of linked list: %d", sz);
+    while(j<i){
+	a = commands[j];
+		if(strcmp(a,"rem_first")==0){
+			remove_first(list_detail, &value, &key);
+			printf("rem_first:  %d %d \n", key, value);
+		}
+		else if(strcmp(a,"rem_last")==0){
+			remove_last(list_detail, &value, &key);
+			printf("rem_last:   %d %d \n", key, value);
 
+		}
+		else if(strcmp(a,"rem_small")==0){
+			remove_smallest_key(list_detail,&value,&key);
+			printf("rem_small:  %d %d\n", key, value);
+		}
+		else if(strcmp(a,"rem_large")==0){
+			remove_largest_key(list_detail,&value,&key);
+			printf("rem_large:  %d %d\n", key, value);
+		}
+		else if(strcmp(a,"print_all")==0){
+			printList(list_detail);
+		}
+		else if(strcmp(a,"print_sort")==0){
+			printList_sort(list_detail);
+		}
+	
+		else if((a[0] == 'p')){
+			int tempk, tempv;
+			char *s;
+			s = a;
+			char *p = strtok(a," ");
+			p = strtok(NULL, " ");
+			sscanf(p, "%d", &tempk);
+			p = strtok(NULL, " ");
+			sscanf(p, "%d", &tempv);
+			push(list_detail, tempv, tempk);
+		}
 
-    empty_list(list_detail);
-    printList(list_detail);
+		else if((a[0] == 'a')){
+			int tempk, tempv;
+			char *s;
+			s = a;
+			char *p = strtok(s," ");
+			p = strtok(NULL, " ");
+			sscanf(p, "%d", &tempk);
+			p = strtok(NULL, " ");
+			sscanf(p, "%d", &tempv);
+			append(list_detail, tempv, tempk);
+		}
 
-    destroy_list(list_detail);
-    printList(list_detail);
+		else if(strcmp(a, "size")==0){
+			int sz = size(list_detail);
+			printf("size:       List size = %d\n", list_detail->size);
+		}
 
+		else if(strcmp(a, "empty")==0){
+			empty_list(list_detail);
+			printf("empty:      size = %d\n", list_detail->size);
+
+		}
+	j++;
+    }
 
     getchar();  
     return 0;  
