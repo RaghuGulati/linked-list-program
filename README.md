@@ -92,7 +92,7 @@ This will make an executable file named a4q1b
 
 #### Run
 
-      ./a4q1b cmd1.txt
+      ./a4q1b cmd.txt
       ./a4q1b
       
 (This will ask the commands from user and user can end giving input using ctrl+D)
