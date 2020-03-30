@@ -4,12 +4,13 @@
 //typedef double key_t;
 #include "sorted_list.h"
 typedef int value_t;
-
+#define INSERTED_ORDER 1
+#define SORTED_ORDER 2
 Sorted_list * map( Sorted_list * old_list_detail, value_t (*f)(value_t)){
 	Sorted_list * new_list= (Sorted_list *)malloc(sizeof(Sorted_list));
 	struct Node* old_node;
 
-
+	new_list->size=old_list_detail->size;
 	old_node = old_list_detail->head;
         //printf("print_all:  Insertion Order \n");
     	while (old_node != NULL) {
@@ -25,12 +26,155 @@ Sorted_list * map( Sorted_list * old_list_detail, value_t (*f)(value_t)){
     	}
 	return new_list;
 	
-//yet to complete
+
+}
+value_t reduce( Sorted_list * list_detail, value_t (*f)(value_t,value_t),value_t init,int order){
+        struct Node* node;
+	value_t value = init;
+	if(order == INSERTED_ORDER){
+        	node = list_detail->head;
+        	while (node != NULL) {
+    
+                	value=(*f)(value,node->value);
+                	node = node->next;
+        	}
+        	return value;
+	}
+	else if(order ==SORTED_ORDER)
+	{      node = list_detail->head_sort;
+                while (node != NULL) {
+
+                        value=(*f)(value,node->value);
+                        node = node->sort;
+                }
+                return value;
+	}   
+
+}
+value_t map_reduce( Sorted_list * list_detail, value_t (*map_fn)(value_t), value_t (*reduce_fn)(value_t,value_t),value_t init,int order){
+        struct Node* node;
+        value_t value = init;
+        if(order == INSERTED_ORDER){
+                node = list_detail->head;
+                while (node != NULL) {
+			value_t tempvalue;
+    			tempvalue=(*map_fn)(node->value);
+                        value=(*reduce_fn)(value,tempvalue);
+                        node = node->next;
+                }
+                return value;
+        }
+        else if(order ==SORTED_ORDER)
+        {      node = list_detail->head_sort;
+                while (node != NULL) {
+			value_t tempvalue;
+                        tempvalue=(*map_fn)(node->value);
+                        value=(*reduce_fn)(value,tempvalue);
+                        node = node->sort;
+                }
+                return value;
+        }
+
+}
+
+
+value_t * map_2_array( Sorted_list * list1,Sorted_list * list2, value_t (*map_fn)(value_t,value_t),int order){
+        if(list2->size != list1->size)
+		return NULL;
+
+	struct Node* node1,*node2;
+	value_t value ;
+ value_t * array=(value_t*)malloc(sizeof(value_t)*list1->size);
+	int counter=0;
+	if(order == INSERTED_ORDER){
+        	node1 = list1->head;
+		node2= list2->head;
+		
+        	while (node1 != NULL && node2 != NULL) {
+    
+                	value=(*map_fn)(node1->value,node2->value);
+                	//array[counter]=value;
+			
+                	*array=value;
+			//counter++;
+			array++;
+			node1 = node1->next;
+			node2= node2->next;
+        	}
+	     	return array;
+	}
+	else if(order ==SORTED_ORDER)
+	{      node1 = list1->head_sort;
+	      node2 = list2->head_sort;
+                while (node1 != NULL && node2 != NULL) {
+
+                        
+                        value=(*map_fn)(node1->value,node2->value);
+			//array[counter]=value;
+			
+                	*array=value;
+			array++;
+			//counter++;
+                        node1 = node1->sort;
+                        node2 = node2->sort;
+                }
+                return array;
+	}   
+
+}
+value_t  map_2_reduce( Sorted_list * list1,Sorted_list * list2, value_t (*map_fn)(value_t,value_t),value_t (*reduce_fn)(value_t,value_t),value_t init,int order){
+
+
+       	struct Node* node1,*node2;
+        value_t value = init;
+        int counter=0;
+        if(order == INSERTED_ORDER){
+                node1 = list1->head;
+		node2= list2->head;
+
+                while (node1 != NULL && node2 != NULL) {
+			value_t tempvalue;
+                        tempvalue=(*map_fn)(node1->value,node2->value);
+                        value=(*reduce_fn)(value,tempvalue);
+                        node1 = node1->next;
+
+                        node2 = node2->next;
+                }
+                return value;
+        }
+        else if(order ==SORTED_ORDER)
+        {
+                node1 = list1->head;
+		node2= list2->head;
+
+                while (node1 != NULL && node2 != NULL) {
+			value_t tempvalue;
+                        tempvalue=(*map_fn)(node1->value,node2->value);
+                        value=(*reduce_fn)(value,tempvalue);
+                        node1 = node1->next;
+
+                        node2 = node2->next;
+                }
+		return value; 
+        }
+
 }
 
 value_t add2(value_t x)
 {
 	return x+2;
+}
+value_t sum(value_t x,value_t y)
+{
+	return x+y;
+}
+value_t diff(value_t x,value_t y)
+{
+	return x-y;
+}
+value_t square(value_t x)
+{
+	return x*x;
 }
 /* Main function of the program*/
 int main( int argc, char *argv[] )  
@@ -142,9 +286,22 @@ int main( int argc, char *argv[] )
 		}
 	j++;
     }
+	Sorted_list * list2 =(Sorted_list *)malloc(sizeof(Sorted_list));
 
+   	list2= map(list_detail,add2);
     printList(map(list_detail,add2));
+    printList(map(list_detail,square));
+    value_t getvalue=reduce(list_detail,sum,0,INSERTED_ORDER);
+    value_t *arr=(value_t *)malloc(sizeof(value_t)*(list2->size));
     
+    arr=map_2_array(list_detail,list2,diff,INSERTED_ORDER);
+    
+    while(arr !=NULL){
+	    printf("%d\n",*arr);
+	    arr++;
+    }
+    
+    printf("\n value %d\n",getvalue);
     getchar();  
     return 0;  
 }  
