@@ -505,8 +505,6 @@ int main( int argc, char *argv[] )
                 size_t input_string_length = 50;
                 input_string = (char *) malloc(input_string_length);
 
-                printf("Enter records data and add EOF with Ctrl+D:\n");
-
                 while(getline(&input_string, &input_string_length, stdin) != -1)
                 {
                         input_string[strcspn(input_string, "\n")] = 0;
@@ -590,6 +588,8 @@ int main( int argc, char *argv[] )
 		}
 	j++;
     }
+
+    destroy_list(list_detail);
 
     getchar();  
     return 0;  
