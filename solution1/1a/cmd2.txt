@@ -1,0 +1,11 @@
+p hello
+a world
+a This is
+p q1a
+size
+print_sort
+print_all
+rem_small
+rem_last
+rem_large
+rem_first
