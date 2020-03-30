@@ -10,7 +10,7 @@ Sorted_list * map( Sorted_list * old_list_detail, value_t (*f)(value_t)){
 	Sorted_list * new_list= (Sorted_list *)malloc(sizeof(Sorted_list));
 	struct Node* old_node;
 
-	new_list->size=old_list_detail->size;
+	//new_list->size=old_list_detail->size;
 	old_node = old_list_detail->head;
         //printf("print_all:  Insertion Order \n");
     	while (old_node != NULL) {
@@ -101,7 +101,7 @@ value_t * map_2_array( Sorted_list * list1,Sorted_list * list2, value_t (*map_fn
 			node1 = node1->next;
 			node2= node2->next;
         	}
-	     	return array;
+	     	return --array;
 	}
 	else if(order ==SORTED_ORDER)
 	{      node1 = list1->head_sort;
@@ -118,7 +118,7 @@ value_t * map_2_array( Sorted_list * list1,Sorted_list * list2, value_t (*map_fn
                         node1 = node1->sort;
                         node2 = node2->sort;
                 }
-                return array;
+                return --array;
 	}   
 
 }
@@ -164,18 +164,56 @@ value_t add2(value_t x)
 {
 	return x+2;
 }
-value_t sum(value_t x,value_t y)
+value_t add_2_number(value_t x,value_t y)
 {
 	return x+y;
 }
-value_t diff(value_t x,value_t y)
+value_t subtract_2_number(value_t x,value_t y)
 {
 	return x-y;
 }
-value_t square(value_t x)
+value_t square_Of_A_Number(value_t x)
 {
 	return x*x;
 }
+value_t square_and_add_number(value_t x,value_t y)
+{
+	return x + square_Of_A_Number(x);
+}
+value_t sum(Sorted_list * list,int order){
+   return reduce(list,add_2_number,0,order);
+
+}
+void print_array(value_t * arr, int size){
+
+    	for(int z=0;z<size;z++){
+            printf("\n     %d",*arr);
+            arr--;
+    	}
+
+}
+value_t * diff (Sorted_list * list1,Sorted_list *list2, int order)
+{
+	if(list1->size != list2->size)
+	{ return NULL;}
+	
+  //    value_t *arr=(value_t *)malloc(sizeof(value_t)*(list2->size));
+	return map_2_array(list1,list2,subtract_2_number,order);
+//	print_array(arr,list2->size);	
+}
+Sorted_list * square(Sorted_list *list)
+{
+	return map(list,square_Of_A_Number);
+}
+
+void *sum_of_sq_diff(Sorted_list *list1,Sorted_list* list2,int order)
+{
+	  if(list1->size != list2->size)
+	        { return NULL;}
+	  printf("%d",map_2_reduce(list1,list2,subtract_2_number,square_and_add_number,0,order));
+
+}
+
 /* Main function of the program*/
 int main( int argc, char *argv[] )  
 {  
@@ -287,21 +325,26 @@ int main( int argc, char *argv[] )
 	j++;
     }
 	Sorted_list * list2 =(Sorted_list *)malloc(sizeof(Sorted_list));
-
+printf(" size %d",list_detail->size);
    	list2= map(list_detail,add2);
-    printList(map(list_detail,add2));
-    printList(map(list_detail,square));
-    value_t getvalue=reduce(list_detail,sum,0,INSERTED_ORDER);
-    value_t *arr=(value_t *)malloc(sizeof(value_t)*(list2->size));
+  //  printList(map(list_detail,add2));
+   // printList(map(list_detail,square));
+   // value_t getvalue=reduce(list_detail,sum,0,INSERTED_ORDER);
+   // value_t *arr=(value_t *)malloc(sizeof(value_t)*(list2->size));
     
-    arr=map_2_array(list_detail,list2,diff,INSERTED_ORDER);
+    //arr=map_2_array(list_detail,list2,diff,INSERTED_ORDER);
+   
+  // for(int z=0;z<list2->size;z++){
+//	    printf("%d\n",*arr);
+//
+//arr--;
+  //  }
     
-    while(arr !=NULL){
-	    printf("%d\n",*arr);
-	    arr++;
-    }
-    
-    printf("\n value %d\n",getvalue);
+//    printf("\n value %d\n",getvalue);
+     printf("sum %d",sum(list_detail,INSERTED_ORDER));
+	print_array(diff(list_detail,list2,INSERTED_ORDER),list2->size);
+	printList(square(list_detail));
+	sum_of_sq_diff(list_detail,list2,INSERTED_ORDER);
     getchar();  
     return 0;  
 }  
