@@ -5,24 +5,33 @@
 #include "sorted_list.h"
 typedef int value_t;
 
-Sorted_list * map( Sorted_list * old_list_detail, void (*f)()){
-	Sorted_list * new_list= (Sorted_list *)malloc(sizeof(struct Sorted_list));
+Sorted_list * map( Sorted_list * old_list_detail, value_t (*f)(value_t)){
+	Sorted_list * new_list= (Sorted_list *)malloc(sizeof(Sorted_list));
 	struct Node* old_node;
-	struct Node * new_node=(Node*)malloc(sizeof(struct Node));
 
 
 	old_node = old_list_detail->head;
         //printf("print_all:  Insertion Order \n");
-    	while (node != NULL) {
+    	while (old_node != NULL) {
         
-		struct Node * new_node=(Node*)malloc(sizeof(struct Node));
+		//struct Node * new_node=(Node*)malloc(sizeof(struct Node));
 		//	printf("     %d  %d\n", node->key, node->value);
-        	node = node->next;
+		value_t value;
+		value=(*f)(old_node->value);
+		append(new_list,value,old_node->key);
+        	old_node = old_node->next;
+
+		
     	}
+	return new_list;
+	
 //yet to complete
 }
 
-
+value_t add2(value_t x)
+{
+	return x+2;
+}
 /* Main function of the program*/
 int main( int argc, char *argv[] )  
 {  
@@ -134,6 +143,8 @@ int main( int argc, char *argv[] )
 	j++;
     }
 
+    printList(map(list_detail,add2));
+    
     getchar();  
     return 0;  
 }  
