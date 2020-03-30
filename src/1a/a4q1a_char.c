@@ -601,6 +601,7 @@ int main( int argc, char *argv[] )
 		}
 	j++;
     }
+    destroy_list(list_detail);
 
     getchar();  
     return 0;  
