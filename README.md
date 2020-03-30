@@ -3,19 +3,25 @@
 ## Makefile
 
 ### Compile
+To compile all programs, run following command in root directory of submission
+where Makefile file is present
+make build
 
+After running make build command, object(.o) files related to source (.c) file
+can be located in their respective directories i.e. in directory - solution1/1a/
 
 ### Run
-
+make run_solution1
 
 ### Clean
-
+To clean up the directories, run command
+make clean
 
 ## Manual compilation and run
 
 ### Solution1
 
-First go to directory src/1a using command:
+First go to directory solution1/1a using command:
 
       cd src/1a/
       It has two files namely: a4q1a_int.c and a4q1a_char.c
@@ -30,11 +36,11 @@ First go to directory src/1a using command:
 
 #### Run
 
-      ./a4q1aint cmd.txt
+      ./a4q1aint cmd1.txt
       ./a4q1aint
       (This will ask the commands from user and user can end giving input using ctrl+D)
 
-      ./a4q1achar cmd.txt
+      ./a4q1achar cmd2.txt
       ./a4q1achar
       (Similar as ./a4q1aint)
       
