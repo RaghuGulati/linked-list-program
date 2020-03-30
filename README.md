@@ -21,7 +21,7 @@ First go to directory src/1a using command:
       It has two files namely: a4q1a_int.c and a4q1a_char.c
 
       a4q1a_int.c will contain the sorted list ADT with integer datatype for value and key
-      a4q1a_char.c will contain the sorted list ADT with string datatype for value and int for kay
+      a4q1a_char.c will contain the sorted list ADT with string datatype for value and int for key
 
 #### Compile
 
