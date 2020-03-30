@@ -50,14 +50,15 @@ This will make an executable file named a4q1achar
 
       ./a4q1aint cmd1.txt
       ./a4q1aint
-      (This will ask the commands from user and user can end giving input using ctrl+D)
+      
+(This will ask the commands from user and user can end giving input using ctrl+D)
 
       ./a4q1achar cmd2.txt
       ./a4q1achar
-      (Similar as ./a4q1aint)
+
+(Similar as ./a4q1aint)
       
-      The commands available are:
-      
+The commands available are:
        - a = append with syntax: 
             a key value for a4q1a_int.c
             a string for a4q1a_int  
