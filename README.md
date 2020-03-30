@@ -30,31 +30,36 @@ To clean up the directories, run command
 
 ### Solution1
 
-First go to directory src/1a using command:
+First go to directory solution1/1a using command:
 
-      cd src/1a/
-      It has two files namely: a4q1a_int.c and a4q1a_char.c
+      cd solution1/1a/
+     
+It has two files namely: a4q1a_int.c and a4q1a_char.c
 
 #### Compile
 
       gcc a4q1a_int.c -o a4q1aint
-      This will make an executable file named a4q1aint
+
+This will make an executable file named a4q1aint
 
       gcc a4q1a_char.c -o a4q1achar
-      This will make an executable file named a4q1achar
+
+This will make an executable file named a4q1achar
 
 #### Run
 
-      ./a4q1aint cmd.txt
+      ./a4q1aint cmd1.txt
       ./a4q1aint
-      (This will ask the commands from user and user can end giving input using ctrl+D)
+      
+(This will ask the commands from user and user can end giving input using ctrl+D)
 
-      ./a4q1achar cmd.txt
+      ./a4q1achar cmd2.txt
       ./a4q1achar
-      (Similar as ./a4q1aint)
+
+(Similar as ./a4q1aint)
       
-      The commands available are:
-      
+The commands available are:
+
        - a = append with syntax: 
             a key value for a4q1a_int.c
             a string for a4q1a_int  
