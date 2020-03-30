@@ -86,7 +86,7 @@ First go to directory solution1/1b using command:
 It has file namely: a4q1b.c
 #### Compile
 
-      gcc a4q1b.c sort_list.c sort_list.h -o a4q1b
+      gcc a4q1b.c sorted_list.c sorted_list.h -o a4q1b
 
 This will make an executable file named a4q1b
 
