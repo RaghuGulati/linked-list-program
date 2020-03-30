@@ -258,6 +258,7 @@ value_t square_and_add_number(value_t x,value_t y)
 {
 	return x + square_Of_A_Number(x);
 }
+
 value_t sum(Sorted_list * list,int order){
    return reduce(list,add_2_number,0,order);
 
@@ -335,16 +336,35 @@ void *sum_of_sq_diff(Sorted_list *list1,Sorted_list* list2,int order)
 
 }
 
+void printList_square(Sorted_list * list_detail)  
+{  
+    struct Node* node;
+    
+    node = list_detail->head;
+    printf("print_all:  Insertion Order \n");
+    while (node != NULL) {  
+        printf("     %d\n", node->value);  
+        node = node->next; 
+    }
+
+}
+
 /* Main function of the program*/
 int main( int argc, char *argv[] )  
 {  
-    /* initilizing head and head_sort for the linked list */
-    Sorted_list * list_detail=(Sorted_list *)malloc(sizeof(Sorted_list));
-    list_detail->head=NULL;
-    list_detail->head_sort=NULL;
-    list_detail->tails=NULL;
-    list_detail->tails_sort=NULL;
+	   /* initilizing head and head_sort for the linked list */
+    Sorted_list * list[10];// = (Sorted_list *)malloc(sizeof(Sorted_list));
     int i = 0;    
+ 
+    while(i<10){
+    	list[i] = (Sorted_list *)malloc(sizeof(Sorted_list));
+	list[i]->head=NULL;
+    	list[i]->head_sort=NULL;
+    	list[i]->tails=NULL;
+    	list[i]->tails_sort=NULL;
+	i++;
+    }
+
     char chunk[50];
     char commands[50][50];
     size_t malloc_size = 100;
@@ -353,14 +373,12 @@ int main( int argc, char *argv[] )
     int j = 0;
     int k = 0;
     char *a;
-
+    i = 0;
     if(argc == 1){
     	printf("input commands. press ctrl+D to stop entering inputs\n");
 	char *input_string;
                 size_t input_string_length = 50;
                 input_string = (char *) malloc(input_string_length);
-
-                printf("Enter records data and add EOF with Ctrl+D:\n");
 
                 while(getline(&input_string, &input_string_length, stdin) != -1)
                 {
@@ -385,66 +403,158 @@ int main( int argc, char *argv[] )
 
     while(j<i){
 	a = commands[j];
-		if(strcmp(a,"rem_first")==0){
-			remove_first(list_detail, &value, &key);
-			printf("rem_first:  %d %d \n", key, value);
+	char *cmd = strtok(a, "|");
+	int n;
+		if(strcmp(cmd,"rem_first")==0){
+			cmd = strtok(NULL, "\0");
+			sscanf(cmd, "%d", &n);
+			remove_first(list[n], &value, &key);
+			printf("rem_first|%d:  %d %d \n",n, key, value);
 		}
-		else if(strcmp(a,"rem_last")==0){
-			remove_last(list_detail, &value, &key);
-			printf("rem_last:   %d %d \n", key, value);
-
+		else if(strcmp(cmd,"rem_last")==0){
+			cmd = strtok(NULL, "\0");
+			sscanf(cmd, "%d", &n);
+			remove_first(list[n], &value, &key);
+			printf("rem_last|%d:  %d %d \n",n, key, value);
 		}
-		else if(strcmp(a,"rem_small")==0){
-			remove_smallest_key(list_detail,&value,&key);
-			printf("rem_small:  %d %d\n", key, value);
+		else if(strcmp(cmd,"rem_small")==0){
+			cmd = strtok(NULL, "\0");
+			sscanf(cmd, "%d", &n);
+			remove_smallest_key(list[n], &value, &key);
+			printf("rem_small|%d:  %d %d \n",n, key, value);
 		}
-		else if(strcmp(a,"rem_large")==0){
-			remove_largest_key(list_detail,&value,&key);
-			printf("rem_large:  %d %d\n", key, value);
+		else if(strcmp(cmd,"rem_large")==0){
+			cmd = strtok(NULL, "\0");
+			sscanf(cmd, "%d", &n);	
+			remove_largest_key(list[n],&value,&key);
+			printf("rem_large|%d:  %d %d\n",n, key, value);
 		}
-		else if(strcmp(a,"print_all")==0){
-			printList(list_detail);
+		else if(strcmp(cmd,"print_all")==0){
+			cmd = strtok(NULL, "\0");
+			sscanf(cmd, "%d", &n);	
+			printList(list[n]);
 		}
-		else if(strcmp(a,"print_sort")==0){
-			printList_sort(list_detail);
+		else if(strcmp(cmd,"print_sort")==0){
+			cmd = strtok(NULL, "\0");
+			sscanf(cmd, "%d", &n);	
+			printList_sort(list[n]);
 		}
 	
-		else if((a[0] == 'p')){
+		else if((cmd[0] == 'p')){
 			int tempk, tempv;
 			char *s;
-			s = a;
-			char *p = strtok(a," ");
-			p = strtok(NULL, " ");
-			sscanf(p, "%d", &tempk);
-			p = strtok(NULL, " ");
-			sscanf(p, "%d", &tempv);
-			push(list_detail, tempv, tempk);
+			cmd = strtok(NULL, " ");
+			sscanf(cmd, "%d", &n);	
+			
+			cmd = strtok(NULL, " ");
+			sscanf(cmd, "%d", &tempk);
+
+			cmd = strtok(NULL, " ");
+			sscanf(cmd, "%d", &tempv);
+			
+			printf("p|%d:          %d  %d\n",n, tempk, tempv);
+			push(list[n], tempv, tempk);
 		}
 
-		else if((a[0] == 'a')){
+		else if((cmd[0] == 'a')){
 			int tempk, tempv;
 			char *s;
-			s = a;
-			char *p = strtok(s," ");
-			p = strtok(NULL, " ");
-			sscanf(p, "%d", &tempk);
-			p = strtok(NULL, " ");
-			sscanf(p, "%d", &tempv);
-			append(list_detail, tempv, tempk);
+			cmd = strtok(NULL, " ");
+			sscanf(cmd, "%d", &n);	
+			
+			cmd = strtok(NULL, " ");
+			sscanf(cmd, "%d", &tempk);
+
+			cmd = strtok(NULL, " ");
+			sscanf(cmd, "%d", &tempv);
+			
+			printf("a|%d:          %d  %d\n",n, tempk, tempv);
+			append(list[n], tempv, tempk);
 		}
 
-		else if(strcmp(a, "size")==0){
-			int sz = size(list_detail);
-			printf("size:       List size = %d\n", list_detail->size);
+		else if(strcmp(cmd, "size")==0){
+			cmd = strtok(NULL, "\0");
+			sscanf(cmd, "%d", &n);	
+
+			int sz = size(list[n]);
+			printf("size|%d:       List size = %d\n",n, list[n]->size);
 		}
 
-		else if(strcmp(a, "empty")==0){
-			empty_list(list_detail);
-			printf("empty:      size = %d\n", list_detail->size);
+		else if(strcmp(cmd, "empty")==0){
+			cmd = strtok(NULL, "\0");
+			sscanf(cmd, "%d", &n);	
+
+			empty_list(list[n]);
+			printf("empty|%d:      size = %d\n",n, list[n]->size);
 
 		}
+		else if(strcmp(cmd, "sum")==0){
+			value_t sum_val;
+
+			cmd = strtok(NULL, " ");
+			sscanf(cmd, "%d", &n);	
+			
+			cmd = strtok(NULL, " ");
+
+			if(strcmp(cmd, "SORTED_ORDER") == 0){
+				sum_val = sum(list[n],SORTED_ORDER);
+			}
+			else if(strcmp(cmd, "INSERTED_ORDER") == 0){
+				sum_val = sum(list[n],INSERTED_ORDER);
+			}
+
+			printf("sum:        list = %d, result = %d\n",n, sum_val);
+
+		}
+
+		else if(strcmp(cmd, "square")==0){
+			cmd = strtok(NULL, " ");
+			sscanf(cmd, "%d", &n);	
+			printList_square(square(list[n]));
+		}
+
+		else if(strcmp(cmd, "diff")==0){
+			int m;
+			cmd = strtok(NULL, ":");
+			sscanf(cmd, "%d", &n);
+			cmd = strtok(NULL, " ");
+			sscanf(cmd, "%d", &m);
+			cmd = strtok(NULL, "\0");
+			
+			printf("\ndiff:       list1 = %d, list2 = %d", n, m);
+			if(strcmp(cmd, "SORTED_ORDER") == 0){
+				print_array(diff(list[n],list[m],SORTED_ORDER),list[m]->size);
+			}
+			else if(strcmp(cmd, "INSERTED_ORDER") == 0){
+				print_array(diff(list[n],list[m],INSERTED_ORDER),list[m]->size);
+			}
+	
+		}
+
+		else if(strcmp(cmd, "sum_sq_d")==0){
+			int m;
+			cmd = strtok(NULL, ":");
+			sscanf(cmd, "%d", &n);
+			cmd = strtok(NULL, " ");
+			sscanf(cmd, "%d", &m);
+			cmd = strtok(NULL, "\0");
+			
+			printf("\ndiff:       list1 = %d, list2 = %d", n, m);
+			if(strcmp(cmd, "SORTED_ORDER") == 0){
+				printf("sum_sq_d:   list1 = %d, list2 = %d, result = ",n,m);
+				sum_of_sq_diff(list[n],list[m],SORTED_ORDER);
+			}
+			else if(strcmp(cmd, "INSERTED_ORDER") == 0){
+				printf("sum_sq_d:   list1 = %d, list2 = %d, result = ",n,m);
+				sum_of_sq_diff(list[n],list[m],INSERTED_ORDER);
+			}
+	
+		}
+
 	j++;
     }
+	
+	/*
 	Sorted_list * list2 =(Sorted_list *)malloc(sizeof(Sorted_list));
 printf(" size %d",list_detail->size);
    	list2= map(list_detail,add2);
@@ -465,7 +575,7 @@ printf(" size %d",list_detail->size);
      printf("sum %d",sum(list_detail,INSERTED_ORDER));
 	print_array(diff(list_detail,list2,INSERTED_ORDER),list2->size);
 	printList(square(list_detail));
-	sum_of_sq_diff(list_detail,list2,INSERTED_ORDER);
+	sum_of_sq_diff(list_detail,list2,INSERTED_ORDER);*/
     getchar();  
     return 0;  
 }  
