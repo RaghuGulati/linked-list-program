@@ -560,8 +560,8 @@ int main( int argc, char *argv[] )
 			p = strtok(NULL, " ");
 			sscanf(p, "%d", &tempk);
 			p = strtok(NULL, " ");
-			printf("p:          %d  %d\n",tempk, tempv);
 			sscanf(p, "%d", &tempv);
+			printf("p:          %d  %d\n",tempk, tempv);
 			push(list_detail, tempv, tempk);
 		}
 
