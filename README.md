@@ -16,13 +16,14 @@ can be located in their respective directories i.e. in directory
 
 ### Run
 
-• Solution1
+For Solution1
 
       make run_solution1
 
 ### Clean
 
 To clean up the directories, run command
+    
       make clean
 
 ## Manual compilation and run
