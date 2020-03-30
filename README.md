@@ -40,8 +40,10 @@ First go to directory src/1a using command:
       
       The commands available are:
       
-       - a = append with syntax: **a key value** for **a4q1a_int.c** and **a string** for a4q1a_int  
-       - p = push similar to a but the command will contain **p** instead of **a**
+       - a = append with syntax: 
+            a key value for a4q1a_int.c
+            a string for a4q1a_int  
+       - p = push similar to a but the command will contain p instead of a
        - rem_first 
        - rem_last
        - rem_small
