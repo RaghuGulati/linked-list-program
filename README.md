@@ -15,14 +15,10 @@ can be located in their respective directories i.e. in directory
       solution1/1a/
 
 ### Run
-<<<<<<< HEAD
-make run_solution1
-=======
 
 For Solution1
 
       make run_solution1
->>>>>>> dcd3ced3ac321b7105a6c5aae6a164354d18248b
 
 ### Clean
 
@@ -34,18 +30,11 @@ To clean up the directories, run command
 
 ### Solution1
 
-<<<<<<< HEAD
 First go to directory solution1/1a using command:
 
       cd solution1/1a/
-      It has two files namely: a4q1a_int.c and a4q1a_char.c
-=======
-First go to directory solution/1a using command:
-
-      cd solution/1a/
      
 It has two files namely: a4q1a_int.c and a4q1a_char.c
->>>>>>> dcd3ced3ac321b7105a6c5aae6a164354d18248b
 
 #### Compile
 
