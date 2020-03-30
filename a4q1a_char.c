@@ -37,12 +37,12 @@ int size(Sorted_list * list_detail) {
 void printList(Sorted_list * list_detail);
 
 /*push function to add the node to the head of the list*/
-int push(Sorted_list * list_detail, value_t  value, key_t  key)  
+int push(Sorted_list * list_detail, value_t value, key_t  key)  
 {  
     struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));  
     struct Node* current = (struct Node*)malloc(sizeof(struct Node));
  
-    new_node->value = value;
+    new_node->value = *(&value);
     new_node->key = key;
   
     new_node->next = list_detail->head;
@@ -116,7 +116,7 @@ int append(Sorted_list * list_detail, value_t  value, key_t  key){
     struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));  
     struct Node* current = (struct Node*)malloc(sizeof(struct Node));
  
-    new_node->value = value;
+    new_node->value = *(&value);
     new_node->key = key;
   
     new_node->next = NULL;
@@ -163,7 +163,6 @@ int append(Sorted_list * list_detail, value_t  value, key_t  key){
 	        new_node->sort = current;
 	        // if the new node is not inserted at the end of the list
 	        if (current != NULL){
-			
 	            	new_node->prev_sorted=current->prev_sorted;
 			current->prev_sorted = new_node;
 			//new_node->prev_sorted->sort=new_node;
@@ -473,14 +472,16 @@ int main( int argc, char *argv[] )
     int j = 0;
     int k = 0;
     char *a;
+    char s1[80];
+    char s2[80];
+/*    push(list_detail, s1, 25);
+    append(list_detail, s2, 36);*/
 
     if(argc == 1){
     	printf("input commands. press ctrl+D to stop entering inputs\n");
 	char *input_string;
                 size_t input_string_length = 50;
                 input_string = (char *) malloc(input_string_length);
-
-                printf("Enter records data and add EOF with Ctrl+D:\n");
 
                 while(getline(&input_string, &input_string_length, stdin) != -1)
                 {
@@ -531,30 +532,27 @@ int main( int argc, char *argv[] )
 	
 		else if((a[0] == 'p')){
 			int tempk;
-			char tempv[80] = "\0";
+			char tempv[80];
 			char *s;
 			s = a;
-			char *p = strtok(a," ");
-			p = strtok(NULL, " ");
-			sscanf(p, "%d", &tempk);
-			p = strtok(NULL, " ");
-			strcpy(tempv, p);
-			printf("%s\n", tempv);
-			push(list_detail, tempv, tempk);
+			char *p = strtok_r(a," ",&a);
+			p = strtok_r(a, "\0", &a);
+			if(strlen(p) >= 80){
+				printf("lenth limit of string exceeded");
+			}
+			tempk = strlen(p);
+			push(list_detail, p, tempk);
 		}
 
 		else if((a[0] == 'a')){
 			int tempk;
-			char tempv[80] = "\0";
+			char tempv[80];
 			char *s;
 			s = a;
 			char *p = strtok(s," ");
-			p = strtok(NULL, " ");
-			sscanf(p, "%d", &tempk);
-			p = strtok(NULL, " ");
-			strcpy(tempv, p);
-			printf("%s\n", tempv);
-			append(list_detail, tempv, tempk);
+			p = strtok(NULL, "\0");
+			tempk = strlen(p);
+			append(list_detail, p, tempk);
 		}
 
 		else if(strcmp(a, "size")==0){
