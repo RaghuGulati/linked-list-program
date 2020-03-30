@@ -1,12 +1,12 @@
 #include <stdio.h>  
 #include <stdlib.h>  
-#include<string.h>
+#include <string.h>
 
 typedef int value_t;
   
 // A linked list node  
 struct Node {  
-    int value;
+    value_t value;
     key_t key;
     struct Node* prev;
     struct Node* next;
@@ -246,7 +246,7 @@ int remove_first(Sorted_list * list_detail,value_t * value, key_t * key)
 		//update head_sort
 		if(list_detail->head->prev_sorted != NULL && list_detail->head->sort != NULL){//if head and head_sort are same
 			list_detail->head->prev_sorted->sort=list_detail->head->sort;
-		       	list_detail->head->sort->prev_sorted=list_detail->head->prev_sorted;
+		        list_detail->head->sort->prev_sorted=list_detail->head->prev_sorted;
 		}
 		else  if(list_detail->head->prev_sorted == NULL && list_detail->head->sort != NULL)
 		{
@@ -505,8 +505,6 @@ int main( int argc, char *argv[] )
                 size_t input_string_length = 50;
                 input_string = (char *) malloc(input_string_length);
 
-                printf("Enter records data and add EOF with Ctrl+D:\n");
-
                 while(getline(&input_string, &input_string_length, stdin) != -1)
                 {
                         input_string[strcspn(input_string, "\n")] = 0;
@@ -562,6 +560,7 @@ int main( int argc, char *argv[] )
 			p = strtok(NULL, " ");
 			sscanf(p, "%d", &tempk);
 			p = strtok(NULL, " ");
+			printf("p:          %d  %d\n",tempk, tempv);
 			sscanf(p, "%d", &tempv);
 			push(list_detail, tempv, tempk);
 		}
@@ -575,6 +574,7 @@ int main( int argc, char *argv[] )
 			sscanf(p, "%d", &tempk);
 			p = strtok(NULL, " ");
 			sscanf(p, "%d", &tempv);
+			printf("a:          %d  %d\n",tempk, tempv);
 			append(list_detail, tempv, tempk);
 		}
 
@@ -590,6 +590,8 @@ int main( int argc, char *argv[] )
 		}
 	j++;
     }
+	
+    destroy_list(list_detail);
 
     getchar();  
     return 0;  
