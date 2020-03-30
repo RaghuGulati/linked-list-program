@@ -3,14 +3,17 @@
 ## Makefile
 
 ### Compile
+
 To compile all programs, run following command in root directory of submission
 where Makefile file is present
-make build
+
+       make build
 
 After running make build command, object(.o) files related to source (.c) file
 can be located in their respective directories i.e. in directory - solution1/1a/
 
 ### Run
+
 • Solution1
 make run_solution1
 • Solution2
@@ -19,8 +22,9 @@ make run_solution2
 make run_solution3
 
 ### Clean
+
 To clean up the directories, run command
-make clean
+      make clean
 
 ## Manual compilation and run
 
