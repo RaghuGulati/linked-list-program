@@ -23,7 +23,7 @@ make clean
 
 First go to directory solution1/1a using command:
 
-      cd src/1a/
+      cd solution1/1a/
       It has two files namely: a4q1a_int.c and a4q1a_char.c
 
 #### Compile
