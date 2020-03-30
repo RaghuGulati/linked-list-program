@@ -120,7 +120,7 @@ int append(Sorted_list * list_detail, value_t  value, key_t  key){
     new_node->key = key;
   
     new_node->next = NULL;
-    new_node->prev = list_detail->tails;;
+    new_node->prev = list_detail->tails;
 
     new_node->sort = NULL;
     new_node->prev_sorted = NULL;
@@ -531,7 +531,7 @@ int main( int argc, char *argv[] )
 	
 		else if((a[0] == 'p')){
 			int tempk;
-			char tempv[80];
+			char tempv[80] = "\0";
 			char *s;
 			s = a;
 			char *p = strtok(a," ");
@@ -545,7 +545,7 @@ int main( int argc, char *argv[] )
 
 		else if((a[0] == 'a')){
 			int tempk;
-			char tempv[80];
+			char tempv[80] = "\0";
 			char *s;
 			s = a;
 			char *p = strtok(s," ");
