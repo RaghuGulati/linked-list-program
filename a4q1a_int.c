@@ -214,12 +214,6 @@ void printList_sort(Sorted_list * list_detail){
 }
 
 /*
- *function to find  node by key
- *@param Sorted_list *
- *@param key_t *
- */
-//TODO
-/*
  *function to remove first node
  *@param Sorted_list *
  *@param value_t
@@ -231,9 +225,10 @@ int remove_first(Sorted_list * list_detail,value_t * value, key_t * key)
 	value_t deleted_Node_Value;
         key_t 	deleted_Node_Key;
 	if(list_detail->head == NULL){
-		printf("\n UNDERFLOW");
+		return 0;
+		//printf("\n UNDERFLOW");
 	}
-	else if(list_detail->head->next==NULL){
+	else if(list_detail->head->next==NULL && list_detail->head->prev== NULL ){
 		deleted_Node_Value=list_detail->head->value;
 		deleted_Node_Key=list_detail->head->key;
 		//onlt one element in list
@@ -242,21 +237,26 @@ int remove_first(Sorted_list * list_detail,value_t * value, key_t * key)
 		list_detail->tails=NULL;
 		list_detail->tails_sort=NULL;
 		free(list_detail->head);
-		printf("\nNode deleted\n");
+		//printf("\nNode deleted\n");
 	}
 	else{
 		ptr =list_detail->head;
 		deleted_Node_Value=list_detail->head->value;
                 deleted_Node_Key=list_detail->head->key;
 		//update head_sort
-		if(list_detail->head->prev_sorted != NULL){//if head and head_sort are same
+		if(list_detail->head->prev_sorted != NULL && list_detail->head->sort != NULL){//if head and head_sort are same
 			list_detail->head->prev_sorted->sort=list_detail->head->sort;
-		        list_detail->head->sort->prev_sorted=list_detail->head->prev_sorted;
+		       	list_detail->head->sort->prev_sorted=list_detail->head->prev_sorted;
 		}
-		else{
-			list_detail->head->sort->prev_sorted=NULL;
+		else  if(list_detail->head->prev_sorted == NULL && list_detail->head->sort != NULL)
+		{
+			list_detail->head->sort->prev_sorted= NULL;
 			list_detail->head_sort=list_detail->head_sort->sort;
-
+		}
+		else  if(list_detail->head->prev_sorted != NULL && list_detail->head->sort == NULL)
+		{
+			list_detail->head->prev_sorted->sort=NULL;
+			list_detail->tails_sort=list_detail->tails_sort->prev_sorted;
 		}
 		//update head
                 list_detail->head=list_detail->head->next;
@@ -279,9 +279,10 @@ int remove_last(Sorted_list * list_detail,value_t * value, key_t * key)
         value_t deleted_Node_Value;
         key_t   deleted_Node_Key;
         if(list_detail->tails == NULL){
-                printf("\n UNDERFLOW");
+               return 0;
+		//  printf("\n UNDERFLOW");
         }
-        else if(list_detail->tails->prev==NULL){
+        else if(list_detail->tails->prev==NULL && list_detail->tails->next== NULL){
                 deleted_Node_Value=list_detail->tails->value;
                 deleted_Node_Key=list_detail->tails->key;
                 //onlt one element in list
@@ -290,21 +291,27 @@ int remove_last(Sorted_list * list_detail,value_t * value, key_t * key)
                 list_detail->head=NULL;
                 list_detail->head_sort=NULL;
                 free(list_detail->tails);
-                printf("\nNode deleted\n");
+               // printf("\nNode deleted\n");
         }
         else{
                 ptr =list_detail->tails;
                 deleted_Node_Value=list_detail->tails->value;
                 deleted_Node_Key=list_detail->tails->key;
                 //update tails_sort
-		if(list_detail->tails->sort != NULL){// check tails and tails_sort are same
+		if(list_detail->tails->sort != NULL && list_detail->tails->prev_sorted != NULL){// check tails and tails_sort are same
                 
 			list_detail->tails->sort->prev_sorted=list_detail->tails->prev_sorted;
 			list_detail->tails->prev_sorted->sort=list_detail->tails->sort;
 		}
-		else{
+		else if (list_detail->tails->sort ==NULL && list_detail->tails->prev_sorted != NULL)
+		{
 			list_detail->tails->prev_sorted->sort=NULL;
 			list_detail->tails_sort=list_detail->tails_sort->prev_sorted;
+		}
+		else if(list_detail->tails->prev_sorted ==NULL && list_detail->tails->sort !=NULL)
+		{
+			list_detail->tails->sort->prev_sorted=NULL;
+			list_detail->head_sort=list_detail->head_sort->sort;
 		}
 
 		
@@ -330,7 +337,7 @@ int remove_smallest_key(Sorted_list * list_detail,value_t * value, key_t * key)
 	value_t deleted_Node_Value;
         key_t 	deleted_Node_Key;
 	if(list_detail->head_sort == NULL){
-		printf("\n UNDERFLOW");
+		return 0;
 	}
 	else if(list_detail->head_sort->sort==NULL){
 		deleted_Node_Value=list_detail->head_sort->value;
@@ -341,23 +348,35 @@ int remove_smallest_key(Sorted_list * list_detail,value_t * value, key_t * key)
 		list_detail->tails=NULL;
 		list_detail->tails_sort=NULL;
 		free(list_detail->head_sort);
-		printf("\nNode deleted\n");
+	//	printf("\nNode deleted\n");
 	}
 	else{
 		ptr =list_detail->head_sort;
 		deleted_Node_Value=list_detail->head_sort->value;
                 deleted_Node_Key=list_detail->head_sort->key;
 		//update head
-		list_detail->head_sort->next->prev=list_detail->head_sort->prev;
-		if(list_detail->head_sort->prev != NULL){//check head and head_sort are same
-			list_detail->head_sort->prev->next=list_detail->head->next;
+		if(list_detail->head_sort->next != NULL)
+		{
+			list_detail->head_sort->next->prev=list_detail->head_sort->prev;
 		}
-		else{
+		
+
+		if(list_detail->head_sort->prev != NULL && list_detail->head_sort->next != NULL){//check head and head_sort are same
+			list_detail->head_sort->prev->next=list_detail->head_sort->next;
+			list_detail->head_sort->next->prev=list_detail->head_sort->prev;
+		}
+		else if(list_detail->head_sort->prev == NULL && list_detail->head_sort->next != NULL)
+		{
 			list_detail->head_sort->next->prev=NULL;
-			list_detail->head= list_detail->head->next;
-
-
+			list_detail->head=list_detail->head->next;
 		}
+		else if(list_detail->head_sort->next ==NULL && list_detail->head_sort->prev != NULL)
+		{
+			list_detail->head_sort->prev->next = NULL;
+			list_detail->tails=list_detail->tails->prev;
+		}
+		
+		
 		//update head_sort
                 list_detail->head_sort=list_detail->head_sort->sort;
 		list_detail->head_sort->prev_sorted=NULL;
@@ -380,9 +399,10 @@ int remove_largest_key(Sorted_list * list_detail,value_t * value, key_t * key)
         value_t deleted_Node_Value;
         key_t   deleted_Node_Key;
         if(list_detail->tails_sort == NULL){
-                printf("\n UNDERFLOW");
+               return 0;
+		// printf("\n UNDERFLOW");
         }
-        else if(list_detail->tails_sort->prev==NULL){
+        else if(list_detail->tails_sort->prev_sorted ==NULL && list_detail->tails_sort->sort ==NULL ){
                 deleted_Node_Value=list_detail->tails_sort->value;
                 deleted_Node_Key=list_detail->tails_sort->key;
                 //onlt one element in list
@@ -398,15 +418,20 @@ int remove_largest_key(Sorted_list * list_detail,value_t * value, key_t * key)
                 deleted_Node_Value=list_detail->tails_sort->value;
                 deleted_Node_Key=list_detail->tails_sort->key;
                 //update tails
-                if(list_detail->tails_sort->next != NULL){//  check  tails and tails_sort are same
+                if(list_detail->tails_sort->next != NULL && list_detail->tails_sort->prev != NULL){//  check  tails and tails_sort are same
 
                         list_detail->tails_sort->next->prev=list_detail->tails_sort->prev;
-                        list_detail->tails_sort->prev->next=list_detail->tails_sort->next;
+                       	list_detail->tails_sort->prev->next=list_detail->tails_sort->next;
                 }
-		else{
+		else if(list_detail->tails_sort->next == NULL && list_detail->tails_sort->prev != NULL)
+		{
 			list_detail->tails_sort->prev->next=NULL;
-			list_detail->tails=list_detail->tails->prev;
-
+			list_detail->tails= list_detail->tails->prev;
+		}
+		else if(list_detail->tails_sort->next != NULL && list_detail->tails_sort->prev == NULL)
+		{
+			list_detail->tails_sort->next->prev=NULL;
+			list_detail->head=list_detail->head->next;
 		}
 
 

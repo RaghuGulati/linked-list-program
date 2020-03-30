@@ -5,3 +5,7 @@ p 36 25
 size
 print_sort
 print_all
+rem_small
+rem_last
+rem_large
+rem_first
