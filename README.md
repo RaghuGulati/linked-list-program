@@ -16,9 +16,13 @@ can be located in their respective directories i.e. in directory
 
 ### Run
 
-For Solution1
+For Solution1a
 
-      make run_solution1
+      make run_solution1a
+
+For Solution1b
+
+      make run_solution1b
 
 ### Clean
 
@@ -28,7 +32,7 @@ To clean up the directories, run command
 
 ## Manual compilation and run
 
-### Solution1
+### Solution1a
 
 First go to directory solution1/1a using command:
 
@@ -73,3 +77,43 @@ The commands available are:
        - print_all 
        - print_sort
 
+### Solution1b
+
+First go to directory solution1/1b using command:
+
+      cd solution1/1b/
+     
+It has file namely: a4q1b.c
+#### Compile
+
+      gcc a4q1b.c -o a4q1b
+
+This will make an executable file named a4q1b
+
+#### Run
+
+      ./a4q1b cmd1.txt
+      ./a4q1b
+      
+(This will ask the commands from user and user can end giving input using ctrl+D)
+     
+The commands available are:
+
+       - a|n = append with syntax: 
+            a|n key value 
+       - p|n = push similar to a but the command will contain p instead of a
+       - rem_first|n 
+       - rem_last|n
+       - rem_small|n
+       - rem_large|n
+       - empty|n
+       - size |n
+       - print_all|n 
+       - print_sort|n
+       - sum|n
+       - square|n
+       - diff|n:m order
+       - sum_sq_d|n:m order
+
+       order specifies: INSERTION_ORDER or SORTED_ORDER
+       n is the index of array of sorted list pointers
