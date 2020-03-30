@@ -59,6 +59,7 @@ This will make an executable file named a4q1achar
 (Similar as ./a4q1aint)
       
 The commands available are:
+
        - a = append with syntax: 
             a key value for a4q1a_int.c
             a string for a4q1a_int  
