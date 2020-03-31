@@ -12,13 +12,14 @@ where Makefile file is present
 After running make build command, object(.o) files related to source (.c) file
 can be located in their respective directories i.e. in directory 
 
+For Question 1a
+
       solution1/1a/
 
-### Run
+For Question 1b
 
-For Solution1
+       solution1/1b
 
-      make run_solution1
 
 ### Clean
 
